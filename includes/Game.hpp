@@ -42,6 +42,12 @@ private:
     Mix_Music *Music;
     const std::string MusicFile = "./res/audio.ogg";
 
+    // 游戏分数计数
+    Counter score;
+
+    // 计时器
+    
+
 public:
     Game()
     {
@@ -197,8 +203,7 @@ public:
     void Run() // 下落速度400ms
     {
         std::uint8_t alpha = 255;
-        Mix_PlayMusic(Music, 1);
-        while (alpha > 102)
+        while (alpha > 76)
         {
             SDL_SetTextureAlphaMod(BackGround, alpha);
             SDL_RenderCopy(Renderer, BackGround, NULL, NULL);
@@ -208,6 +213,7 @@ public:
             SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
             SDL_RenderClear(Renderer);
         }
+        // Mix_PlayMusic(Music, 1);
         SDL_Delay(10000);
     }
 };
