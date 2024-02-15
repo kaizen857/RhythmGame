@@ -43,7 +43,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "g++.exe build active file"
+            "preLaunchTask": "g++ build active file"
         }
     ]
 }
