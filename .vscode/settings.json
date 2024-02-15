@@ -1,0 +1,6 @@
+{
+    "clangd.fallbackFlags": [
+        "-Ic:/SDL2-2.28.5/x86_64-w64-mingw32/include",
+        "-Ic://SDL_Project//RhythmGame//includes"
+    ]
+}
