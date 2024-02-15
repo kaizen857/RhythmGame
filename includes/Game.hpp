@@ -7,6 +7,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
@@ -145,33 +146,65 @@ public:
             }
             map.push_back(Note(start, end, key, temp));
         }*/
-
+    }
+    void ShowStart(void)
+    {
         // 加载开始界面（请按任意键开始）字体
         auto start = TTF_RenderUTF8_Blended(Font, "Press any key to start", FontColor);
         auto FontTexture = SDL_CreateTextureFromSurface(Renderer, start);
-
         SDL_Rect MessageRect;
         MessageRect.x = Widge / 2 - start->w / 2; // 居中
         MessageRect.y = Height / 2 - start->h / 2;
         SDL_QueryTexture(FontTexture, NULL, NULL, &MessageRect.w, &MessageRect.h);
         SDL_RenderCopy(Renderer, FontTexture, NULL, &MessageRect);
-        SDL_RenderPresent(Renderer);
-        SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-        SDL_RenderClear(Renderer);
         SDL_FreeSurface(start);
-    }
+        // 修改字体大小
+        TTF_SetFontSize(Font, 20);
+        // 界面左上角信息（乐曲名字，铺面难度）
+        auto MusicName = TTF_RenderUTF8_Blended(Font, "Name:Rainbow Rush Story", FontColor);
+        auto MusicDifficulty = TTF_RenderUTF8_Blended(Font, "Difficulty:Standard", FontColor);
+        auto MusicArtist = TTF_RenderUTF8_Blended(Font, "Artist:いるかアイス feat. ちょこ", FontColor);
 
+        auto MusicNameTexture = SDL_CreateTextureFromSurface(Renderer, MusicName);
+        auto MusicDifficultyTexture = SDL_CreateTextureFromSurface(Renderer, MusicDifficulty);
+        auto MusicArtistTexture = SDL_CreateTextureFromSurface(Renderer, MusicArtist);
+        // 设定信息位置
+        SDL_Rect MusicNameRect;
+        SDL_Rect MusicDifficultyRect;
+        SDL_Rect MusicArtistRect;
+        MusicNameRect.x = 0;
+        MusicNameRect.y = 0;
+        SDL_QueryTexture(MusicNameTexture, NULL, NULL, &MusicNameRect.w, &MusicNameRect.h);
+        MusicDifficultyRect.x = 0;
+        MusicDifficultyRect.y = MusicNameRect.h + 10;
+        SDL_QueryTexture(MusicDifficultyTexture, NULL, NULL, &MusicDifficultyRect.w, &MusicDifficultyRect.h);
+        MusicArtistRect.x = 0;
+        MusicArtistRect.y = MusicDifficultyRect.y + MusicDifficultyRect.h + 10;
+        SDL_QueryTexture(MusicArtistTexture, NULL, NULL, &MusicArtistRect.w, &MusicArtistRect.h);
+        // 渲染信息
+        SDL_RenderCopy(Renderer, MusicNameTexture, NULL, &MusicNameRect);
+        SDL_RenderCopy(Renderer, MusicDifficultyTexture, NULL, &MusicDifficultyRect);
+        SDL_RenderCopy(Renderer, MusicArtistTexture, NULL, &MusicArtistRect);
+        SDL_RenderPresent(Renderer);
+
+        SDL_FreeSurface(MusicName);
+        SDL_FreeSurface(MusicDifficulty);
+        SDL_FreeSurface(MusicArtist);
+        SDL_DestroyTexture(MusicNameTexture);
+        SDL_DestroyTexture(MusicDifficultyTexture);
+        SDL_DestroyTexture(MusicArtistTexture);
+    }
     void Run() // 下落速度400ms
     {
         std::uint8_t alpha = 255;
         Mix_PlayMusic(Music, 1);
-        while (alpha > 0)
+        while (alpha > 102)
         {
             SDL_SetTextureAlphaMod(BackGround, alpha);
             SDL_RenderCopy(Renderer, BackGround, NULL, NULL);
             SDL_RenderPresent(Renderer);
-            alpha -= 1;
-            SDL_Delay(100);
+            alpha -= 5;
+            SDL_Delay(1);
             SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
             SDL_RenderClear(Renderer);
         }

@@ -3,7 +3,8 @@
 int main(int, char *[])
 {
     Game game;
-    game.Init("C://SDL_Project//RhythmGame//res");
+    game.Init("./res");
+    game.ShowStart();
     SDL_Event Event;
     bool Quit = false;
     while (!Quit)
