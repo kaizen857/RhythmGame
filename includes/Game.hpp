@@ -122,7 +122,7 @@ public:
             std::exit(EXIT_FAILURE);
         }
         // 加载音乐
-        Mix_Music *music = Mix_LoadMUS(MusicFile.c_str());
+        Music = Mix_LoadMUS(MusicFile.c_str());
         // 加载地图
         /*std::ifstream in(path);
         if (!in.is_open())

@@ -30,6 +30,30 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+                {
+            "type": "shell",
+            "label": "g++ build active file",
+            //注意改成自己的MinGW目录
+            "command": "g++",
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-lSDL2main",
+                "-lSDL2",
+                "-lSDL2_image",
+                "-lSDL2_ttf",
+                "-lSDL2_mixer",
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }
