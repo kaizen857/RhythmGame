@@ -1,0 +1,440 @@
+nowtime:3445
+Now Size:0
+nowtime:3461
+Now Size:0
+nowtime:3478
+Now Size:0
+nowtime:3494
+Now Size:0
+nowtime:3511
+Now Size:0
+nowtime:3527
+Now Size:0
+nowtime:3544
+Now Size:0
+nowtime:3560
+Now Size:0
+nowtime:3578
+Now Size:0
+nowtime:3595
+Now Size:0
+nowtime:3611
+Now Size:0
+nowtime:3628
+Now Size:0
+nowtime:3645
+Now Size:0
+nowtime:3662
+Now Size:0
+nowtime:3679
+Now Size:0
+nowtime:3695
+Now Size:0
+nowtime:3712
+Now Size:0
+nowtime:3729
+Now Size:0
+nowtime:3746
+Now Size:0
+nowtime:3762
+Now Size:0
+nowtime:3779
+Now Size:0
+nowtime:3795
+Now Size:0
+nowtime:3812
+Now Size:0
+nowtime:3829
+Now Size:0
+nowtime:3845
+Now Size:0
+nowtime:3862
+Now Size:0
+nowtime:3879
+Now Size:0
+nowtime:3896
+Now Size:0
+nowtime:3912
+Now Size:0
+nowtime:3929
+Now Size:0
+nowtime:3946
+Now Size:0
+nowtime:3962
+Now Size:0
+nowtime:3979
+Now Size:0
+nowtime:3996
+Now Size:0
+nowtime:4011
+Now Size:0
+nowtime:4028
+Now Size:0
+nowtime:4045
+Now Size:0
+nowtime:4061
+Now Size:0
+nowtime:4078
+Now Size:0
+nowtime:4095
+Now Size:0
+nowtime:4111
+Now Size:0
+nowtime:4128
+Now Size:0
+nowtime:4146
+Now Size:0
+nowtime:4161
+Now Size:0
+nowtime:4178
+Now Size:0
+nowtime:4195
+Now Size:0
+nowtime:4211
+Now Size:0
+nowtime:4228
+Now Size:0
+nowtime:4245
+Now Size:0
+nowtime:4261
+Now Size:0
+nowtime:4278
+Now Size:0
+nowtime:4294
+Now Size:0
+nowtime:4310
+Now Size:0
+nowtime:4327
+Now Size:0
+nowtime:4344
+Now Size:0
+nowtime:4360
+Now Size:0
+nowtime:4377
+Now Size:0
+nowtime:4394
+Now Size:0
+nowtime:4411
+Now Size:0
+nowtime:4428
+Now Size:0
+nowtime:4445
+Now Size:0
+nowtime:4461
+Now Size:0
+nowtime:4478
+Now Size:0
+nowtime:4495
+Now Size:0
+nowtime:4511
+Now Size:0
+nowtime:4528
+Now Size:0
+nowtime:4546
+Now Size:0
+nowtime:4561
+Now Size:0
+nowtime:4579
+Now Size:1
+S:36Rect.y36
+nowtime:4596
+Now Size:3
+S:34Rect.y70
+S:34Rect.y34
+S:34Rect.y34
+nowtime:4612
+Now Size:3
+S:32Rect.y102
+S:32Rect.y66
+S:32Rect.y66
+nowtime:4629
+Now Size:3
+S:34Rect.y136
+S:34Rect.y100
+S:34Rect.y100
+nowtime:4646
+Now Size:3
+S:34Rect.y170
+S:34Rect.y134
+S:34Rect.y134
+nowtime:4663
+Now Size:3
+S:34Rect.y204
+S:34Rect.y168
+S:34Rect.y168
+nowtime:4679
+Now Size:3
+S:32Rect.y236
+S:32Rect.y200
+S:32Rect.y200
+nowtime:4696
+Now Size:4
+S:34Rect.y270
+S:34Rect.y234
+S:34Rect.y234
+S:34Rect.y34
+nowtime:4713
+Now Size:4
+S:34Rect.y304
+S:34Rect.y268
+S:34Rect.y268
+S:34Rect.y68
+nowtime:4729
+Now Size:4
+S:32Rect.y336
+S:32Rect.y300
+S:32Rect.y300
+S:32Rect.y100
+nowtime:4748
+Now Size:4
+S:38Rect.y374
+S:38Rect.y338
+S:38Rect.y338
+S:38Rect.y138
+nowtime:4762
+Now Size:4
+S:28Rect.y402
+S:28Rect.y366
+S:28Rect.y366
+S:28Rect.y166
+nowtime:4779
+Now Size:4
+S:34Rect.y436
+S:34Rect.y400
+S:34Rect.y400
+S:34Rect.y200
+nowtime:4796
+Now Size:4
+S:34Rect.y470
+S:34Rect.y434
+S:34Rect.y434
+S:34Rect.y234
+nowtime:4812
+Now Size:4
+S:32Rect.y502
+S:32Rect.y466
+S:32Rect.y466
+S:32Rect.y266
+nowtime:4829
+Now Size:4
+S:34Rect.y536
+S:34Rect.y500
+S:34Rect.y500
+S:34Rect.y300
+nowtime:4846
+Now Size:4
+S:34Rect.y570
+S:34Rect.y534
+S:34Rect.y534
+S:34Rect.y334
+nowtime:4862
+Now Size:4
+S:32Rect.y602
+S:32Rect.y566
+S:32Rect.y566
+S:32Rect.y366
+nowtime:4879
+Now Size:5
+S:34Rect.y636
+S:34Rect.y600
+S:34Rect.y600
+S:34Rect.y400
+S:34Rect.y34
+nowtime:4896
+Now Size:5
+S:34Rect.y670
+S:34Rect.y634
+S:34Rect.y634
+S:34Rect.y434
+S:34Rect.y68
+nowtime:4913
+Now Size:5
+S:34Rect.y704
+S:34Rect.y668
+S:34Rect.y668
+S:34Rect.y468
+S:34Rect.y102
+nowtime:4929
+Now Size:5
+S:32Rect.y736
+S:32Rect.y700
+S:32Rect.y700
+S:32Rect.y500
+S:32Rect.y134
+nowtime:4946
+Now Size:5
+S:34Rect.y770
+S:34Rect.y734
+S:34Rect.y734
+S:34Rect.y534
+S:34Rect.y168
+nowtime:4962
+Now Size:5
+S:32Rect.y802
+S:32Rect.y766
+S:32Rect.y766
+S:32Rect.y566
+S:32Rect.y200
+nowtime:4978
+Now Size:5
+S:32Rect.y834
+S:32Rect.y798
+S:32Rect.y798
+S:32Rect.y598
+S:32Rect.y232
+nowtime:4995
+Now Size:5
+S:34Rect.y868
+S:34Rect.y832
+S:34Rect.y832
+S:34Rect.y632
+S:34Rect.y266
+nowtime:5011
+Now Size:4
+S:32Rect.y864
+S:32Rect.y864
+S:32Rect.y664
+S:32Rect.y298
+nowtime:5027
+Now Size:2
+S:32Rect.y696
+S:32Rect.y330
+nowtime:5045
+Now Size:2
+S:36Rect.y732
+S:36Rect.y366
+nowtime:5062
+Now Size:2
+S:34Rect.y766
+S:34Rect.y400
+nowtime:5078
+Now Size:2
+S:32Rect.y798
+S:32Rect.y432
+nowtime:5095
+Now Size:2
+S:34Rect.y832
+S:34Rect.y466
+nowtime:5112
+Now Size:2
+S:34Rect.y866
+S:34Rect.y500
+nowtime:5128
+Now Size:1
+S:32Rect.y532
+nowtime:5145
+Now Size:1
+S:34Rect.y566
+nowtime:5162
+Now Size:1
+S:34Rect.y600
+nowtime:5178
+Now Size:1
+S:32Rect.y632
+nowtime:5195
+Now Size:1
+S:34Rect.y666
+nowtime:5212
+Now Size:1
+S:34Rect.y700
+nowtime:5228
+Now Size:1
+S:32Rect.y732
+nowtime:5245
+Now Size:1
+S:34Rect.y766
+nowtime:5262
+Now Size:1
+S:34Rect.y800
+nowtime:5278
+Now Size:1
+S:32Rect.y832
+nowtime:5295
+Now Size:1
+S:34Rect.y866
+nowtime:5311
+Now Size:0
+nowtime:5328
+Now Size:0
+nowtime:5345
+Now Size:0
+nowtime:5361
+Now Size:0
+nowtime:5378
+Now Size:0
+nowtime:5395
+Now Size:0
+nowtime:5412
+Now Size:0
+nowtime:5429
+Now Size:0
+nowtime:5445
+Now Size:0
+nowtime:5462
+Now Size:0
+nowtime:5479
+Now Size:0
+nowtime:5495
+Now Size:0
+nowtime:5512
+Now Size:0
+nowtime:5528
+Now Size:0
+nowtime:5544
+Now Size:0
+nowtime:5561
+Now Size:0
+nowtime:5579
+Now Size:0
+nowtime:5596
+Now Size:0
+nowtime:5613
+Now Size:0
+nowtime:5629
+Now Size:0
+nowtime:5646
+Now Size:0
+nowtime:5663
+Now Size:0
+nowtime:5680
+Now Size:0
+nowtime:5696
+Now Size:0
+nowtime:5713
+Now Size:0
+nowtime:5730
+Now Size:0
+nowtime:5747
+Now Size:0
+nowtime:5763
+Now Size:0
+nowtime:5780
+Now Size:0
+nowtime:5796
+Now Size:0
+nowtime:5813
+Now Size:0
+nowtime:5830
+Now Size:0
+nowtime:5846
+Now Size:0
+nowtime:5863
+Now Size:0
+nowtime:5880
+Now Size:0
+nowtime:5896
+Now Size:0
+nowtime:5913
+Now Size:0
+nowtime:5930
+Now Size:0
+nowtime:5946
+Now Size:0
+nowtime:5963
+Now Size:0
+nowtime:5980
+Now Size:0
+nowtime:5996
+Now Size:0
+nowtime:6011
+Now Size:0
