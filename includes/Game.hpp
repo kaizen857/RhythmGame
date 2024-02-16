@@ -84,12 +84,6 @@ private:
         SDL_Quit();
     }
 
-    // 游戏分数计数
-    Counter score;
-
-    // 计时器
-    
-
 public:
     Game()
     {
