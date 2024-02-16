@@ -9,6 +9,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <chrono>
 #include <queue>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
@@ -82,6 +83,12 @@ private:
         IMG_Quit();
         SDL_Quit();
     }
+
+    // 游戏分数计数
+    Counter score;
+
+    // 计时器
+    
 
 public:
     Game()
