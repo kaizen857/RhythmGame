@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <ctime>
+#include <SDL2/SDL.h>
 
 enum NoteType
 {
@@ -126,6 +127,90 @@ public:
     void Resect(void)
     {
         Perfect = Good = Bad = Miss = 0;
+    }
+};
+
+class ShowNote
+{
+private:
+    Note note;
+    SDL_Rect Rect;
+    bool IsJudge = false;
+    SDL_Color DrawColor;
+
+public:
+    ShowNote(int x, int y, int w, int h, Note note_) :
+        note(note_)
+    {
+        Rect.x = x;
+        Rect.y = y;
+        Rect.w = w;
+        Rect.h = h;
+        DrawColor = {255, 255, 255, 255}; // 默认渲染色为白色
+    }
+    ShowNote(int x, int y, int w, int h, SDL_Color color, Note note_) :
+        note(note_)
+    {
+        Rect.x = x;
+        Rect.y = y;
+        Rect.w = w;
+        Rect.h = h;
+        DrawColor = color;
+    }
+    // setter
+    void SetIsJudge(bool isJudge)
+    {
+        IsJudge = isJudge;
+    }
+
+    void SetRectYPos(int y)
+    {
+        Rect.y = y;
+    }
+
+    void PlusRectYPos(int y)
+    {
+        Rect.y += y;
+    }
+
+    // getter
+    bool GetIsJudge(void) const
+    {
+        return IsJudge;
+    }
+
+    int GetYPos(void) const
+    {
+        return Rect.y;
+    }
+    // 获取note开始时间
+    std::time_t GetStartTime(void) const
+    {
+        return note.GetStartTime();
+    }
+    // 获取note结束时间
+    std::time_t GetEndTime(void) const
+    {
+        return note.GetEndTime();
+    }
+    // 获取note轨道位置
+    int GetKey() const
+    {
+        return note.GetKey();
+    }
+    // 获取note类型
+    NoteType GetType() const
+    {
+        return note.GetType();
+    }
+
+    void Draw(SDL_Renderer *renderer)
+    {
+        SDL_Color OldColor;
+        SDL_GetRenderDrawColor(renderer, &OldColor.r, &OldColor.g, &OldColor.b, &OldColor.a);
+        SDL_SetRenderDrawColor(renderer, DrawColor.r, DrawColor.g, DrawColor.b, DrawColor.a);
+        SDL_RenderFillRect(renderer, &Rect);
+        SDL_SetRenderDrawColor(renderer, OldColor.r, OldColor.g, OldColor.b, OldColor.a);
     }
 };
 

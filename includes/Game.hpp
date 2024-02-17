@@ -8,6 +8,7 @@
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
 #include <chrono>
+#include <cstring>
 #include <queue>
 #include <cstddef>
 #include <cstdint>
@@ -43,20 +44,20 @@ private:
     // 音乐相关设定
     Mix_Music *Music;
     const std::string MusicFile = "./res/audio.ogg";
-    //分数计数器
+    // 分数计数器
     Counter score;
-    //音符下落速度(400ms 走完Height  单位pix/ms)
+    // 音符下落速度(400ms 走完Height  单位pix/ms)
     const std::uint16_t Speed = Height / 400;
-    //判定线位置
+    // 判定线位置
     SDL_Rect JudgeLine{Widge / 2 - 200, Height - 40, 400, 15};
 
-    //准确度判定(单位：ms)
+    // 准确度判定(单位：ms)
     const Uint8 PerfectTiming = 25;
     const Uint8 GoodTiming = 75;
     const Uint8 BadTiming = 125;
     const Uint8 MissTiming = 175;
 
-    //辅助函数 绘制游戏界面
+    // 辅助函数 绘制游戏界面
     void DrawInterface(void)
     {
         SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
@@ -71,7 +72,7 @@ private:
         SDL_RenderFillRect(Renderer, &JudgeLine);
     }
 
-    //辅助函数 中途退出
+    // 辅助函数 中途退出
     void Quit(void)
     {
         SDL_DestroyRenderer(Renderer);
@@ -142,6 +143,12 @@ public:
         TTF_Quit();
         IMG_Quit();
         SDL_Quit();
+        std::ofstream out("score.txt");
+        out << score.GetPerfect() << "\n"
+            << score.GetGood() << "\n"
+            << score.GetBad() << "\n"
+            << score.GetMiss() << "\n";
+        out.close();
         // Mix_Quit();
     }
 
@@ -213,7 +220,7 @@ public:
         }
         in.close();
 
-        //加载游戏界面纹理
+        // 加载游戏界面纹理
     }
     void ShowMenu(void)
     {
@@ -226,7 +233,7 @@ public:
         SDL_QueryTexture(FontTexture, NULL, NULL, &MessageRect.w, &MessageRect.h);
         SDL_RenderCopy(Renderer, FontTexture, NULL, &MessageRect);
         SDL_FreeSurface(start);
-        //设置字体大小
+        // 设置字体大小
         TTF_SetFontSize(Font, 20);
         // 显示左上角歌曲信息
         auto SongName = TTF_RenderUTF8_Blended(Font, "Song Name:Rainbow Rush Story", FontColor);
@@ -237,7 +244,7 @@ public:
         auto SongDifficultyTexture = SDL_CreateTextureFromSurface(Renderer, SongDifficulty);
         auto SongArtistTexture = SDL_CreateTextureFromSurface(Renderer, SongArtist);
 
-        //确定位置
+        // 确定位置
         SDL_Rect SongNamePos, SongDifficultyPos, SongArtistPos;
         SongNamePos.x = SongDifficultyPos.x = SongArtistPos.x = 0;
         SongNamePos.y = 0;
@@ -246,7 +253,7 @@ public:
         SDL_QueryTexture(SongArtistTexture, NULL, NULL, &SongArtistPos.w, &SongArtistPos.h);
         SongDifficultyPos.y = SongNamePos.y + SongNamePos.h + 10;
         SongArtistPos.y = SongDifficultyPos.y + SongDifficultyPos.h + 10;
-        //将材质复制进渲染器
+        // 将材质复制进渲染器
         SDL_RenderCopy(Renderer, SongNameTexture, NULL, &SongNamePos);
         SDL_RenderCopy(Renderer, SongDifficultyTexture, NULL, &SongDifficultyPos);
         SDL_RenderCopy(Renderer, SongArtistTexture, NULL, &SongArtistPos);
@@ -255,7 +262,7 @@ public:
     void Run() // 下落速度400ms
     {
         std::uint8_t alpha = 255;
-        //调整背景图不透明度
+        // 调整背景图不透明度
         while (alpha > 76)
         {
             SDL_SetTextureAlphaMod(BackGround, alpha);
@@ -266,21 +273,23 @@ public:
             SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
             SDL_RenderClear(Renderer);
         }
-        //渲染游戏界面
+        // 渲染游戏界面
         DrawInterface();
         // Mix_PlayMusic(Music, 1);
         SDL_RenderPresent(Renderer);
         auto StartTime = SDL_GetTicks();
-        std::queue<SDL_Rect> RenderQueue;
+        std::queue<ShowNote> RenderQueue;
         std::int32_t ShowIndex = 0;
         auto LastTime = SDL_GetTicks();
         std::ofstream out("info.txt");
         Uint32 JudgePoint = 0;
         bool IsQuit = false;
-        while (!IsQuit)
+        while (!IsQuit) // 游戏内循环
         {
+            // 获取当前帧时间
             auto NowTime = SDL_GetTicks();
             out << "nowtime:" << NowTime << "\n";
+            // 添加note进渲染队列
             if (ShowIndex < map.size() && map[ShowIndex][0].GetStartTime() - 400 <= NowTime - StartTime)
             {
                 for (auto &i : map[ShowIndex])
@@ -291,68 +300,96 @@ public:
                     {
                         int x = Widge / 2 - 200 + (Key - 1) * 100;
                         int y = 0;
-                        RenderQueue.push({x, y, 100, 20});
+                        RenderQueue.push({x, y, 100, 20, i});
                     }
                 }
                 ShowIndex++;
             }
-            DrawInterface();
+            // 渲染note以及游戏界面（同时判定note）
             auto Size = RenderQueue.size();
-            out << "Now Size:" << Size << "\n";
+            bool IsJudge[4];
+            memset(IsJudge, 0, sizeof(IsJudge));
+            DrawInterface();
             for (auto i = 0; i < Size; i++)
             {
-                auto Rect = RenderQueue.front();
+                auto Now = RenderQueue.front();
                 RenderQueue.pop();
-                SDL_RenderFillRect(Renderer, &Rect);
-                auto S = Speed * (NowTime - LastTime);
-                Rect.y += S;
-                out << "S:" << S << "Rect.y" << Rect.y << "\n";
-                if (Rect.y <= JudgeLine.y)
+                // 如果当前音符已经到达画面底部但仍未被判定
+                if (Now.GetYPos() >= Height && Now.GetIsJudge() == false)
                 {
-                    RenderQueue.push(Rect);
+                    score.PlusMiss(); // miss+1
+                    Size--;
+                    continue; // 并丢弃音符
                 }
-            }
-            SDL_RenderPresent(Renderer);
-            if (SDL_PollEvent(&Event))
-            {
-                if (Event.type == SDL_QUIT)
+                SDL_PollEvent(&Event);
+                if (Event.type == SDL_QUIT) // 先判定键盘事件
                 {
-                    Quit();
+                    IsQuit = true;
+                    break;
                 }
-                else if (Event.type == SDL_KEYDOWN)
+                else if (Event.type == SDL_KEYDOWN) // 对输入事件进行判定
                 {
-                    auto differ = std::abs((NowTime - StartTime) - map[JudgePoint][0].GetStartTime());
-                    for (auto &i : map[JudgePoint])
+                    auto ReqKey = Now.GetKey();
+                    if (ReqKey == 0)
                     {
-                        if (differ <= MissTiming)
+                        ReqKey = SDLK_a;
+                    }
+                    else if (ReqKey == 1)
+                    {
+                        ReqKey = SDLK_s;
+                    }
+                    else if (ReqKey == 2)
+                    {
+                        ReqKey = SDLK_k;
+                    }
+                    else
+                    {
+                        ReqKey = SDLK_l;
+                    }
+                    if (IsJudge[Now.GetKey()] == false) // 如果当前轨道无音符被判定则进入判定（防止提早判定）
+                    {
+                        auto dif = (NowTime - StartTime) - Now.GetStartTime();
+                        if (dif < 0) // 比判定时间更早点到（不判定miss）
                         {
-                            Uint8 NowKey;
-                            switch (Event.key.keysym.sym)
+                            dif = std::abs(dif);
+                            if (Event.key.keysym.sym == ReqKey)
                             {
-                            case SDLK_a:
-                                NowKey = 1;
-                                break;
-                            case SDLK_s:
-                                NowKey = 2;
-                                break;
-                            case SDLK_j:
-                                NowKey = 3;
-                                break;
-                            case SDLK_k:
-                                NowKey = 4;
-                                break;
+                                if (dif <= PerfectTiming)
+                                {
+                                    score.PlusPerfect();
+                                    Now.SetIsJudge(true);
+                                    IsJudge[Now.GetKey()] = true;
+                                    Size--;
+                                }
+                                else if (dif <= GoodTiming)
+                                {
+                                    score.PlusGood();
+                                    Now.SetIsJudge(true);
+                                    IsJudge[Now.GetKey()] = true;
+                                    Size--;
+                                }
+                                else if (dif <= BadTiming)
+                                {
+                                    score.PlusBad();
+                                    Now.SetIsJudge(true);
+                                    IsJudge[Now.GetKey()] = true;
+                                    Size--;
+                                }
                             }
-                            if (NowKey == i.GetKey())
+                        }
+                        else // 比判定时间更晚点到（判定Miss）
+                        {
+                            if (Event.key.keysym.sym == ReqKey)
                             {
-                                if (differ <= PerfectTiming)
+                                if (dif <= PerfectTiming)
                                 {
                                     score.PlusPerfect();
                                 }
-                                else if (differ <= GoodTiming)
+                                else if (dif <= GoodTiming)
                                 {
                                     score.PlusGood();
                                 }
-                                else if (differ <= BadTiming)
+                                else if (dif <= BadTiming)
                                 {
                                     score.PlusBad();
                                 }
@@ -360,16 +397,28 @@ public:
                                 {
                                     score.PlusMiss();
                                 }
+                                Now.SetIsJudge(true);
+                                IsJudge[Now.GetKey()] = true;
+                                Size--;
                             }
                         }
                     }
+                    // 更新画面（如果note已做判定则不进行渲染）
+                    if (!Now.GetIsJudge())
+                    {
+                        auto S = Speed * (NowTime - LastTime);
+                        Now.PlusRectYPos(S);
+                        Now.Draw(Renderer);
+                        RenderQueue.push(Now); // 将音符重新放入渲染队列
+                    }
                 }
             }
-            if (NowTime > 6000)
+            SDL_RenderPresent(Renderer);
+            LastTime = NowTime;
+            if (NowTime > 10000)
             {
                 IsQuit = true;
             }
-            LastTime = NowTime;
         }
         out.close();
         SDL_Delay(10000);

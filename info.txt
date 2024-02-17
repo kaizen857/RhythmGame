@@ -1,474 +1,203 @@
-nowtime:3160
-Now Size:0
-nowtime:3177
-Now Size:0
-nowtime:3193
-Now Size:0
-nowtime:3210
-Now Size:0
-nowtime:3227
-Now Size:0
-nowtime:3243
-Now Size:0
-nowtime:3260
-Now Size:0
+nowtime:2490
+nowtime:2492
+nowtime:2498
+nowtime:2542
+nowtime:2543
+nowtime:2548
+nowtime:2553
+nowtime:2559
+nowtime:2565
+nowtime:2570
+nowtime:2576
+nowtime:2581
+nowtime:2587
+nowtime:2592
+nowtime:2598
+nowtime:2603
+nowtime:2609
+nowtime:2615
+nowtime:2620
+nowtime:2626
+nowtime:2631
+nowtime:2637
+nowtime:2642
+nowtime:2648
+nowtime:2653
+nowtime:2659
+nowtime:2665
+nowtime:2670
+nowtime:2676
+nowtime:2681
+nowtime:2687
+nowtime:2692
+nowtime:2698
+nowtime:2703
+nowtime:2709
+nowtime:2714
+nowtime:2720
+nowtime:2726
+nowtime:2731
+nowtime:2737
+nowtime:2742
+nowtime:2748
+nowtime:2754
+nowtime:2759
+nowtime:2765
+nowtime:2770
+nowtime:2776
+nowtime:2781
+nowtime:2787
+nowtime:2792
+nowtime:2798
+nowtime:2803
+nowtime:2809
+nowtime:2815
+nowtime:2820
+nowtime:2826
+nowtime:2831
+nowtime:2837
+nowtime:2842
+nowtime:2848
+nowtime:2853
+nowtime:2859
+nowtime:2864
+nowtime:2870
+nowtime:2876
+nowtime:2881
+nowtime:2887
+nowtime:2892
+nowtime:2898
+nowtime:2903
+nowtime:2909
+nowtime:2915
+nowtime:2920
+nowtime:2926
+nowtime:2931
+nowtime:2937
+nowtime:2943
+nowtime:2948
+nowtime:2953
+nowtime:2959
+nowtime:2964
+nowtime:2970
+nowtime:2976
+nowtime:2981
+nowtime:2987
+nowtime:2992
+nowtime:2998
+nowtime:3003
+nowtime:3009
+nowtime:3014
+nowtime:3020
+nowtime:3026
+nowtime:3031
+nowtime:3037
+nowtime:3042
+nowtime:3048
+nowtime:3053
+nowtime:3059
+nowtime:3064
+nowtime:3070
+nowtime:3076
+nowtime:3081
+nowtime:3087
+nowtime:3092
+nowtime:3098
+nowtime:3103
+nowtime:3109
+nowtime:3115
+nowtime:3120
+nowtime:3126
+nowtime:3131
+nowtime:3137
+nowtime:3143
+nowtime:3148
+nowtime:3153
+nowtime:3159
+nowtime:3165
+nowtime:3170
+nowtime:3176
+nowtime:3181
+nowtime:3187
+nowtime:3192
+nowtime:3198
+nowtime:3203
+nowtime:3209
+nowtime:3215
+nowtime:3220
+nowtime:3226
+nowtime:3231
+nowtime:3237
+nowtime:3242
+nowtime:3248
+nowtime:3254
+nowtime:3259
+nowtime:3265
+nowtime:3270
 nowtime:3276
-Now Size:0
-nowtime:3293
-Now Size:0
+nowtime:3281
+nowtime:3287
+nowtime:3292
+nowtime:3298
+nowtime:3303
 nowtime:3309
-Now Size:0
+nowtime:3315
+nowtime:3320
 nowtime:3326
-Now Size:0
+nowtime:3331
+nowtime:3337
 nowtime:3342
-Now Size:0
+nowtime:3348
+nowtime:3353
 nowtime:3359
-Now Size:0
+nowtime:3365
+nowtime:3370
 nowtime:3376
-Now Size:0
-nowtime:3393
-Now Size:0
-nowtime:3410
-Now Size:0
-nowtime:3427
-Now Size:0
-nowtime:3444
-Now Size:0
-nowtime:3460
-Now Size:0
-nowtime:3477
-Now Size:0
-nowtime:3494
-Now Size:0
-nowtime:3510
-Now Size:0
-nowtime:3527
-Now Size:0
-nowtime:3543
-Now Size:0
-nowtime:3560
-Now Size:0
-nowtime:3577
-Now Size:0
-nowtime:3593
-Now Size:0
-nowtime:3610
-Now Size:0
-nowtime:3627
-Now Size:0
-nowtime:3643
-Now Size:0
-nowtime:3660
-Now Size:0
-nowtime:3677
-Now Size:0
-nowtime:3693
-Now Size:0
-nowtime:3710
-Now Size:0
-nowtime:3727
-Now Size:0
-nowtime:3743
-Now Size:0
-nowtime:3760
-Now Size:0
-nowtime:3777
-Now Size:0
-nowtime:3794
-Now Size:0
-nowtime:3810
-Now Size:0
-nowtime:3826
-Now Size:0
-nowtime:3843
-Now Size:0
-nowtime:3859
-Now Size:0
-nowtime:3876
-Now Size:0
-nowtime:3893
-Now Size:0
-nowtime:3910
-Now Size:0
-nowtime:3927
-Now Size:0
-nowtime:3944
-Now Size:0
-nowtime:3961
-Now Size:0
-nowtime:3978
-Now Size:0
-nowtime:3994
-Now Size:0
-nowtime:4010
-Now Size:0
-nowtime:4027
-Now Size:0
-nowtime:4043
-Now Size:0
-nowtime:4060
-Now Size:0
-nowtime:4077
-Now Size:0
-nowtime:4094
-Now Size:0
-nowtime:4110
-Now Size:0
-nowtime:4127
-Now Size:0
-nowtime:4143
-Now Size:0
-nowtime:4160
-Now Size:0
-nowtime:4177
-Now Size:0
-nowtime:4194
-Now Size:0
-nowtime:4210
-Now Size:0
-nowtime:4227
-Now Size:0
-nowtime:4244
-Now Size:0
-nowtime:4261
-Now Size:0
-nowtime:4277
-Now Size:0
-nowtime:4294
-Now Size:1
-S:34Rect.y34
-nowtime:4310
-Now Size:3
-S:32Rect.y66
-S:32Rect.y32
-S:32Rect.y32
-nowtime:4327
-Now Size:3
-S:34Rect.y100
-S:34Rect.y66
-S:34Rect.y66
-nowtime:4343
-Now Size:3
-S:32Rect.y132
-S:32Rect.y98
-S:32Rect.y98
-nowtime:4360
-Now Size:3
-S:34Rect.y166
-S:34Rect.y132
-S:34Rect.y132
-nowtime:4377
-Now Size:3
-S:34Rect.y200
-S:34Rect.y166
-S:34Rect.y166
-nowtime:4393
-Now Size:3
-S:32Rect.y232
-S:32Rect.y198
-S:32Rect.y198
-nowtime:4410
-Now Size:3
-S:34Rect.y266
-S:34Rect.y232
-S:34Rect.y232
-nowtime:4427
-Now Size:4
-S:34Rect.y300
-S:34Rect.y266
-S:34Rect.y266
-S:34Rect.y34
-nowtime:4444
-Now Size:4
-S:34Rect.y334
-S:34Rect.y300
-S:34Rect.y300
-S:34Rect.y68
-nowtime:4460
-Now Size:4
-S:32Rect.y366
-S:32Rect.y332
-S:32Rect.y332
-S:32Rect.y100
-nowtime:4477
-Now Size:4
-S:34Rect.y400
-S:34Rect.y366
-S:34Rect.y366
-S:34Rect.y134
-nowtime:4494
-Now Size:4
-S:34Rect.y434
-S:34Rect.y400
-S:34Rect.y400
-S:34Rect.y168
-nowtime:4510
-Now Size:4
-S:32Rect.y466
-S:32Rect.y432
-S:32Rect.y432
-S:32Rect.y200
-nowtime:4527
-Now Size:4
-S:34Rect.y500
-S:34Rect.y466
-S:34Rect.y466
-S:34Rect.y234
-nowtime:4544
-Now Size:4
-S:34Rect.y534
-S:34Rect.y500
-S:34Rect.y500
-S:34Rect.y268
-nowtime:4560
-Now Size:4
-S:32Rect.y566
-S:32Rect.y532
-S:32Rect.y532
-S:32Rect.y300
-nowtime:4577
-Now Size:4
-S:34Rect.y600
-S:34Rect.y566
-S:34Rect.y566
-S:34Rect.y334
-nowtime:4594
-Now Size:5
-S:34Rect.y634
-S:34Rect.y600
-S:34Rect.y600
-S:34Rect.y368
-S:34Rect.y34
-nowtime:4610
-Now Size:5
-S:32Rect.y666
-S:32Rect.y632
-S:32Rect.y632
-S:32Rect.y400
-S:32Rect.y66
-nowtime:4627
-Now Size:5
-S:34Rect.y700
-S:34Rect.y666
-S:34Rect.y666
-S:34Rect.y434
-S:34Rect.y100
-nowtime:4644
-Now Size:5
-S:34Rect.y734
-S:34Rect.y700
-S:34Rect.y700
-S:34Rect.y468
-S:34Rect.y134
-nowtime:4660
-Now Size:5
-S:32Rect.y766
-S:32Rect.y732
-S:32Rect.y732
-S:32Rect.y500
-S:32Rect.y166
-nowtime:4677
-Now Size:5
-S:34Rect.y800
-S:34Rect.y766
-S:34Rect.y766
-S:34Rect.y534
-S:34Rect.y200
-nowtime:4694
-Now Size:5
-S:34Rect.y834
-S:34Rect.y800
-S:34Rect.y800
-S:34Rect.y568
-S:34Rect.y234
-nowtime:4710
-Now Size:5
-S:32Rect.y866
-S:32Rect.y832
-S:32Rect.y832
-S:32Rect.y600
-S:32Rect.y266
-nowtime:4727
-Now Size:4
-S:34Rect.y866
-S:34Rect.y866
-S:34Rect.y634
-S:34Rect.y300
-nowtime:4744
-Now Size:2
-S:34Rect.y668
-S:34Rect.y334
-nowtime:4760
-Now Size:2
-S:32Rect.y700
-S:32Rect.y366
-nowtime:4777
-Now Size:2
-S:34Rect.y734
-S:34Rect.y400
-nowtime:4794
-Now Size:2
-S:34Rect.y768
-S:34Rect.y434
-nowtime:4810
-Now Size:2
-S:32Rect.y800
-S:32Rect.y466
-nowtime:4827
-Now Size:2
-S:34Rect.y834
-S:34Rect.y500
-nowtime:4843
-Now Size:2
-S:32Rect.y866
-S:32Rect.y532
-nowtime:4860
-Now Size:1
-S:34Rect.y566
-nowtime:4876
-Now Size:1
-S:32Rect.y598
-nowtime:4893
-Now Size:1
-S:34Rect.y632
-nowtime:4910
-Now Size:1
-S:34Rect.y666
-nowtime:4927
-Now Size:1
-S:34Rect.y700
-nowtime:4945
-Now Size:1
-S:36Rect.y736
-nowtime:4961
-Now Size:1
-S:32Rect.y768
-nowtime:4978
-Now Size:1
-S:34Rect.y802
-nowtime:4995
-Now Size:1
-S:34Rect.y836
-nowtime:5011
-Now Size:1
-S:32Rect.y868
-nowtime:5027
-Now Size:0
-nowtime:5044
-Now Size:0
-nowtime:5060
-Now Size:0
-nowtime:5077
-Now Size:0
-nowtime:5094
-Now Size:0
-nowtime:5110
-Now Size:0
-nowtime:5127
-Now Size:0
-nowtime:5144
-Now Size:0
-nowtime:5160
-Now Size:0
-nowtime:5177
-Now Size:0
-nowtime:5194
-Now Size:0
-nowtime:5211
-Now Size:0
-nowtime:5227
-Now Size:0
-nowtime:5244
-Now Size:0
-nowtime:5260
-Now Size:0
-nowtime:5277
-Now Size:0
-nowtime:5294
-Now Size:0
-nowtime:5310
-Now Size:0
-nowtime:5327
-Now Size:0
-nowtime:5344
-Now Size:0
-nowtime:5360
-Now Size:0
-nowtime:5377
-Now Size:0
-nowtime:5394
-Now Size:0
-nowtime:5411
-Now Size:0
-nowtime:5427
-Now Size:0
-nowtime:5444
-Now Size:0
-nowtime:5461
-Now Size:0
-nowtime:5477
-Now Size:0
-nowtime:5494
-Now Size:0
-nowtime:5511
-Now Size:0
-nowtime:5527
-Now Size:0
-nowtime:5544
-Now Size:0
-nowtime:5561
-Now Size:0
-nowtime:5577
-Now Size:0
-nowtime:5594
-Now Size:0
-nowtime:5611
-Now Size:0
-nowtime:5627
-Now Size:0
-nowtime:5644
-Now Size:0
-nowtime:5660
-Now Size:0
-nowtime:5677
-Now Size:0
-nowtime:5694
-Now Size:0
-nowtime:5711
-Now Size:0
-nowtime:5727
-Now Size:0
-nowtime:5744
-Now Size:0
-nowtime:5760
-Now Size:0
-nowtime:5777
-Now Size:0
-nowtime:5794
-Now Size:0
-nowtime:5811
-Now Size:0
-nowtime:5829
-Now Size:0
-nowtime:5844
-Now Size:0
-nowtime:5860
-Now Size:0
-nowtime:5877
-Now Size:0
-nowtime:5893
-Now Size:0
-nowtime:5910
-Now Size:0
-nowtime:5927
-Now Size:0
-nowtime:5945
-Now Size:0
-nowtime:5962
-Now Size:0
-nowtime:5978
-Now Size:0
-nowtime:5995
-Now Size:0
-nowtime:6011
-Now Size:0
+nowtime:3381
+nowtime:3387
+nowtime:3392
+nowtime:3398
+nowtime:3403
+nowtime:3409
+nowtime:3415
+nowtime:3420
+nowtime:3426
+nowtime:3431
+nowtime:3437
+nowtime:3442
+nowtime:3448
+nowtime:3453
+nowtime:3459
+nowtime:3465
+nowtime:3470
+nowtime:3476
+nowtime:3481
+nowtime:3487
+nowtime:3492
+nowtime:3498
+nowtime:3503
+nowtime:3509
+nowtime:3515
+nowtime:3520
+nowtime:3526
+nowtime:3531
+nowtime:3537
+nowtime:3542
+nowtime:3548
+nowtime:3553
+nowtime:3559
+nowtime:3565
+nowtime:3570
+nowtime:3576
+nowtime:3581
+nowtime:3587
+nowtime:3592
+nowtime:3598
+nowtime:3603
+nowtime:3609
+nowtime:3615
+nowtime:3620
+nowtime:3626
+nowtime:3631
+nowtime:3637
+nowtime:10779
