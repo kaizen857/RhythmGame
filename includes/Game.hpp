@@ -7,7 +7,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
-#include <chrono>
+// #include <chrono>
 #include <cstring>
 #include <queue>
 #include <cstddef>
@@ -28,9 +28,6 @@ private:
     // 窗口宽度，高度
     const std::int16_t Widge = 1600;
     const std::int16_t Height = 900;
-    // 界面，渲染器
-    SDL_Surface *Surface;
-    SDL_Texture *Texture;
     // SDL_IMG相关设定
     std::int32_t ImgFlags = IMG_INIT_JPG;
     const std::string ImgFile = "./res/bg.jpg";
