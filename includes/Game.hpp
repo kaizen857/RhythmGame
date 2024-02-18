@@ -44,7 +44,7 @@ private:
     // 分数计数器
     Counter score;
     // 音符下落速度(400ms 走完Height  单位pix/ms)
-    const std::uint16_t Speed = Height / 400;
+    const Uint16 Speed = Height / 400;
     // 判定线位置
     SDL_Rect JudgeLine{Widge / 2 - 200, Height - 40, 400, 15};
 
