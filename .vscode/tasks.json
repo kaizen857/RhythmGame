@@ -8,7 +8,7 @@
             "command": "C:\\MinGW-W64\\mingw64\\bin\\g++.exe",
             "args": [
                 "-g",
-                "${file}",
+                "C:\\SDL_Project\\RhythmGame\\main.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-lmingw32",

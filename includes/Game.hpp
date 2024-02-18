@@ -403,14 +403,14 @@ public:
                             }
                         }
                     }
-                    // 更新画面（如果note已做判定则不进行渲染）
-                    if (!Now.GetIsJudge())
-                    {
-                        auto S = Speed * (NowTime - LastTime);
-                        Now.PlusRectYPos(S);
-                        Now.Draw(Renderer);
-                        RenderQueue.push(Now); // 将音符重新放入渲染队列
-                    }
+                }
+                // 更新画面（如果note已做判定则不进行渲染）
+                if (!Now.GetIsJudge())
+                {
+                    auto S = Speed * (NowTime - LastTime);
+                    Now.PlusRectYPos(S);
+                    Now.Draw(Renderer);
+                    RenderQueue.push(Now); // 将音符重新放入渲染队列
                 }
             }
             SDL_RenderPresent(Renderer);
