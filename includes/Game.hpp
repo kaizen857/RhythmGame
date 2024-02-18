@@ -43,11 +43,10 @@ private:
     const std::string MusicFile = "./res/audio.ogg";
     // 分数计数器
     Counter score;
-    // 音符下落速度(400ms 走完Height  单位pix/ms)
-    const Uint16 Speed = Height / 400;
     // 判定线位置
     SDL_Rect JudgeLine{Widge / 2 - 200, Height - 40, 400, 15};
-
+    // 音符下落速度(400ms 走完Height  单位pix/ms)
+    const Uint16 Speed = JudgeLine.y / 400;
     // 准确度判定(单位：ms)
     const Uint8 PerfectTiming = 25;
     const Uint8 GoodTiming = 75;
@@ -287,7 +286,7 @@ public:
             auto NowTime = SDL_GetTicks();
             out << "nowtime:" << NowTime << "\n";
             // 添加note进渲染队列
-            if (ShowIndex < map.size() && map[ShowIndex][0].GetStartTime() - 400 <= NowTime - StartTime)
+            if (ShowIndex < map.size() && map[ShowIndex][0].GetStartTime() - 400 <= (NowTime - StartTime))
             {
                 for (auto &i : map[ShowIndex])
                 {
@@ -297,7 +296,7 @@ public:
                     {
                         int x = Widge / 2 - 200 + (Key - 1) * 100;
                         int y = 0;
-                        RenderQueue.push({x, y, 100, 20, i});
+                        RenderQueue.push({x, y, 100, 15, i});
                     }
                 }
                 ShowIndex++;
@@ -319,7 +318,7 @@ public:
                     continue; // 并丢弃音符
                 }
                 SDL_PollEvent(&Event);
-                if (Event.type == SDL_QUIT) // 先判定键盘事件
+                if (Event.type == SDL_QUIT) // 先判定退出
                 {
                     IsQuit = true;
                     break;
@@ -343,7 +342,7 @@ public:
                     {
                         ReqKey = SDLK_l;
                     }
-                    if (IsJudge[Now.GetKey()] == false) // 如果当前轨道无音符被判定则进入判定（防止提早判定）
+                    if (IsJudge[Now.GetKey() - 1] == false) // 如果当前轨道无音符被判定则进入判定（防止提早判定）
                     {
                         auto dif = (NowTime - StartTime) - Now.GetStartTime();
                         if (dif < 0) // 比判定时间更早点到（不判定miss）
@@ -355,21 +354,21 @@ public:
                                 {
                                     score.PlusPerfect();
                                     Now.SetIsJudge(true);
-                                    IsJudge[Now.GetKey()] = true;
+                                    IsJudge[Now.GetKey() - 1] = true;
                                     Size--;
                                 }
                                 else if (dif <= GoodTiming)
                                 {
                                     score.PlusGood();
                                     Now.SetIsJudge(true);
-                                    IsJudge[Now.GetKey()] = true;
+                                    IsJudge[Now.GetKey() - 1] = true;
                                     Size--;
                                 }
                                 else if (dif <= BadTiming)
                                 {
                                     score.PlusBad();
                                     Now.SetIsJudge(true);
-                                    IsJudge[Now.GetKey()] = true;
+                                    IsJudge[Now.GetKey() - 1] = true;
                                     Size--;
                                 }
                             }
@@ -395,7 +394,7 @@ public:
                                     score.PlusMiss();
                                 }
                                 Now.SetIsJudge(true);
-                                IsJudge[Now.GetKey()] = true;
+                                IsJudge[Now.GetKey() - 1] = true;
                                 Size--;
                             }
                         }
