@@ -29,8 +29,8 @@ private:
     const std::int16_t Widge = 1600;
     const std::int16_t Height = 900;
     // SDL_IMG相关设定
-    std::int32_t ImgFlags = IMG_INIT_JPG;
-    const std::string ImgFile = "./res/bg.jpg";
+    std::int32_t ImgFlags = IMG_INIT_PNG;
+    const std::string ImgFile = "./res/bg.png";
     SDL_Texture *BackGround;
     std::vector<std::vector<Note>> map;
     // 字体相关设定
@@ -45,6 +45,14 @@ private:
     Counter score;
     // 判定线位置
     SDL_Rect JudgeLine{Widge / 2 - 200, Height - 40, 400, 15};
+    // 轨道宽度
+    const Uint16 TrackWidth = 100;
+    // note高度
+    const Uint16 NoteHeight = 25;
+    // 距离判定显示后的时间
+    Uint32 DisplayTime = 0;
+    // 判定显示的最大时间
+    const Uint32 MaxDisplayTime = 1000;
     // 轨道数
     const Uint8 TrackNum = 4;
     // 音符下落速度(400ms 走完Height  单位pix/ms)
@@ -54,15 +62,17 @@ private:
     const Uint8 GoodTiming = 75;
     const Uint8 BadTiming = 125;
     const Uint8 MissTiming = 175;
+    // 键位
+    SDL_KeyCode KeyCodeForFour[4] = {SDLK_a, SDLK_s, SDLK_k, SDLK_l};
 
     // 游戏note材质
-    const std::string NoteFile = "../res/mania/mania-note1.png";
+    const std::string NoteFile = "./res/mania/mania_note1.png";
     SDL_Texture *NoteTexture;
     // 游戏判定相关材质
-    const std::string ShowPerfectFile = "../res/mania/mania-hitPerfect@2x.png";
-    const std::string ShowGoodFile = "../res/mania/mania-hitGood@2x.png";
-    const std::string ShowBadFile = "../res/mania/mania-hitBad@2x.png";
-    const std::string ShowMissFile = "../res/mania/mania-hitMiss@2x.png";
+    const std::string ShowPerfectFile = "./res/mania/mania_hitPerfect@2x.png";
+    const std::string ShowGoodFile = "./res/mania/mania_hitGood@2x.png";
+    const std::string ShowBadFile = "./res/mania/mania_hitBad@2x.png";
+    const std::string ShowMissFile = "./res/mania/mania_hitMiss@2x.png";
     SDL_Texture *PerfectTexture;
     SDL_Texture *GoodTexture;
     SDL_Texture *BadTexture;
@@ -70,6 +80,20 @@ private:
 
     // 渲染队列
     std::queue<ShowNote> *RenderQueue;
+    // 退出标志
+    bool IsQuit = false;
+    // 游戏开始时间
+    Uint32 StartTime;
+    // 上一帧时间
+    Uint32 LastTime;
+    // 当前帧时间
+    Uint32 CurrentTime;
+    // 添加note的索引
+    Uint32 NoteIndex;
+    // 距离开始游戏的时间
+    Uint32 StartGameTime;
+
+    std::ofstream out;
 
     // 辅助函数 绘制游戏界面
     void DrawInterface(void)
@@ -78,11 +102,11 @@ private:
         SDL_RenderClear(Renderer);
         SDL_RenderCopy(Renderer, BackGround, NULL, NULL);
         SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
-        SDL_RenderDrawLine(Renderer, Widge / 2 - 200, 0, Widge / 2 - 200, Height);
-        SDL_RenderDrawLine(Renderer, Widge / 2 - 100, 0, Widge / 2 - 100, Height);
+        SDL_RenderDrawLine(Renderer, Widge / 2 - (TrackWidth * 2), 0, Widge / 2 - (TrackWidth * 2), Height);
+        SDL_RenderDrawLine(Renderer, Widge / 2 - TrackWidth, 0, Widge / 2 - TrackWidth, Height);
         SDL_RenderDrawLine(Renderer, Widge / 2, 0, Widge / 2, Height);
-        SDL_RenderDrawLine(Renderer, Widge / 2 + 100, 0, Widge / 2 + 100, Height);
-        SDL_RenderDrawLine(Renderer, Widge / 2 + 200, 0, Widge / 2 + 200, Height);
+        SDL_RenderDrawLine(Renderer, Widge / 2 + TrackWidth, 0, Widge / 2 + TrackWidth, Height);
+        SDL_RenderDrawLine(Renderer, Widge / 2 + (TrackWidth * 2), 0, Widge / 2 + (TrackWidth * 2), Height);
         SDL_RenderFillRect(Renderer, &JudgeLine);
     }
     // 判定
@@ -90,22 +114,84 @@ private:
     {
         for (Uint8 i = 0; i < TrackNum; i++)
         {
+            auto note = RenderQueue[i].front();
+            SDL_Keycode ReqKey = KeyCodeForFour[i];
+            if (SDL_PollEvent(&Event))
+            {
+                if (Event.type == SDL_QUIT)
+                {
+                    Quit();
+                }
+                else if (Event.type == SDL_KEYDOWN)
+                {
+                    if (Event.key.keysym.sym == ReqKey)
+                    {
+                        auto diff = StartGameTime - note.GetStartTime();
+                    }
+                }
+            }
         }
     }
     // 渲染
     void Show(void)
     {
-        for (Uint8 i = 0; i < TrackNum; i++)
+        for (auto i = 0; i < TrackNum; i++)
         {
+            auto Size = RenderQueue[i].size();
+            for (auto j = 0; j < Size; j++)
+            {
+                auto note = RenderQueue[i].front();
+                RenderQueue[i].pop();
+                if (note.GetIsJudge() == true)
+                {
+                    continue;
+                }
+                else
+                {
+                    note.Draw(Renderer, NoteTexture);
+                    out << "Draw:" << note.GetYPos() << "\n";
+                    auto Distence = Speed * (CurrentTime - LastTime);
+                    note.PlusRectYPos(Distence);
+                    if (note.GetYPos() > Height)
+                    {
+                        if (note.GetIsJudge() == false)
+                        {
+                            score.PlusMiss();
+                        }
+                    }
+                    else
+                    {
+                        RenderQueue[i].push(note);
+                    }
+                }
+            }
         }
     }
     // 添加note
     void AddNote(void)
     {
+        if (NoteIndex < map.size() && StartGameTime >= (map[NoteIndex][0].GetStartTime()) - 410)
+        {
+            for (auto &i : map[NoteIndex])
+            {
+                auto key = i.GetKey() - 1;
+                auto x = (Widge / 2 - (TrackWidth * 2)) + (key * TrackWidth);
+                RenderQueue[key].push({x, 0, TrackWidth, NoteHeight, i});
+                out << "New note:" << i.GetStartTime() << " " << i.GetKey() << " " << x << "\n";
+            }
+            NoteIndex++;
+        }
     }
     // 辅助函数 中途退出
     void Quit(void)
     {
+        IsQuit = true;
+        SDL_DestroyTexture(BackGround);
+        SDL_DestroyTexture(NoteTexture);
+        SDL_DestroyTexture(PerfectTexture);
+        SDL_DestroyTexture(GoodTexture);
+        SDL_DestroyTexture(BadTexture);
+        SDL_DestroyTexture(MissTexture);
         SDL_DestroyRenderer(Renderer);
         SDL_DestroyWindow(Window);
         TTF_CloseFont(Font);
@@ -114,6 +200,12 @@ private:
         TTF_Quit();
         IMG_Quit();
         SDL_Quit();
+        std::ofstream out("score.txt");
+        out << score.GetPerfect() << "\n"
+            << score.GetGood() << "\n"
+            << score.GetBad() << "\n"
+            << score.GetMiss() << "\n";
+        out.close();
     }
 
 public:
@@ -133,14 +225,14 @@ public:
             throw(std::runtime_error(SDL_GetError()));
             std::exit(EXIT_FAILURE);
         }
+        // 初始化渲染器
+        Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         // 设置纹理线性过滤
         if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2"))
         {
             throw(std::runtime_error("Warning: Linear texture filtering not enabled!"));
             std::exit(EXIT_FAILURE);
         }
-        // 初始化渲染器
-        Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
         // 初始化SDL_IMG库
         if (!(IMG_Init(ImgFlags) & ImgFlags))
         {
@@ -166,20 +258,31 @@ public:
 
     ~Game()
     {
-        SDL_DestroyRenderer(Renderer);
-        SDL_DestroyWindow(Window);
-        TTF_CloseFont(Font);
-        Mix_FreeMusic(Music);
-        Mix_Quit();
-        TTF_Quit();
-        IMG_Quit();
-        SDL_Quit();
-        std::ofstream out("score.txt");
-        out << score.GetPerfect() << "\n"
-            << score.GetGood() << "\n"
-            << score.GetBad() << "\n"
-            << score.GetMiss() << "\n";
-        out.close();
+        // 释放资源
+        if (!IsQuit)
+        {
+            SDL_DestroyTexture(BackGround);
+            SDL_DestroyTexture(NoteTexture);
+            SDL_DestroyTexture(PerfectTexture);
+            SDL_DestroyTexture(GoodTexture);
+            SDL_DestroyTexture(BadTexture);
+            SDL_DestroyTexture(MissTexture);
+            SDL_DestroyRenderer(Renderer);
+            SDL_DestroyWindow(Window);
+            TTF_CloseFont(Font);
+            Mix_FreeMusic(Music);
+            Mix_Quit();
+            TTF_Quit();
+            IMG_Quit();
+            SDL_Quit();
+            out.close();
+            out.open("score.txt");
+            out << score.GetPerfect() << "\n"
+                << score.GetGood() << "\n"
+                << score.GetBad() << "\n"
+                << score.GetMiss() << "\n";
+            out.close();
+        }
     }
 
     void Init(std::string path)
@@ -251,6 +354,31 @@ public:
         in.close();
 
         // 加载游戏界面纹理
+        auto NoteSurface = IMG_Load(NoteFile.c_str());
+        auto PerfectSurface = IMG_Load(ShowPerfectFile.c_str());
+        auto GoodSurface = IMG_Load(ShowGoodFile.c_str());
+        auto BadSurface = IMG_Load(ShowBadFile.c_str());
+        auto MissSurface = IMG_Load(ShowMissFile.c_str());
+        auto FinalNoteSurface = SDL_ConvertSurface(NoteSurface, SDL_GetWindowSurface(Window)->format, 0);
+        auto FinalPerfectSurface = SDL_ConvertSurface(PerfectSurface, SDL_GetWindowSurface(Window)->format, 0);
+        auto FinalGoodSurface = SDL_ConvertSurface(GoodSurface, SDL_GetWindowSurface(Window)->format, 0);
+        auto FinalBadSurface = SDL_ConvertSurface(BadSurface, SDL_GetWindowSurface(Window)->format, 0);
+        auto FinalMissSurface = SDL_ConvertSurface(MissSurface, SDL_GetWindowSurface(Window)->format, 0);
+        NoteTexture = SDL_CreateTextureFromSurface(Renderer, FinalNoteSurface);
+        PerfectTexture = SDL_CreateTextureFromSurface(Renderer, FinalPerfectSurface);
+        GoodTexture = SDL_CreateTextureFromSurface(Renderer, FinalGoodSurface);
+        BadTexture = SDL_CreateTextureFromSurface(Renderer, FinalBadSurface);
+        MissTexture = SDL_CreateTextureFromSurface(Renderer, FinalMissSurface);
+        SDL_FreeSurface(NoteSurface);
+        SDL_FreeSurface(PerfectSurface);
+        SDL_FreeSurface(GoodSurface);
+        SDL_FreeSurface(BadSurface);
+        SDL_FreeSurface(MissSurface);
+        SDL_FreeSurface(FinalNoteSurface);
+        SDL_FreeSurface(FinalPerfectSurface);
+        SDL_FreeSurface(FinalGoodSurface);
+        SDL_FreeSurface(FinalBadSurface);
+        SDL_FreeSurface(FinalMissSurface);
     }
     void ShowMenu(void)
     {
@@ -304,6 +432,22 @@ public:
             SDL_RenderClear(Renderer);
         }
         // 渲染游戏界面
+        RenderQueue = new std::queue<ShowNote>[TrackNum];
+        StartTime = SDL_GetTicks();
+        LastTime = StartTime;
+        out.open("output.txt");
+        NoteIndex = 0;
+        while (!IsQuit)
+        {
+            CurrentTime = SDL_GetTicks();
+            StartGameTime = CurrentTime - StartTime;
+            DrawInterface();
+            AddNote();
+            Judge();
+            Show();
+            SDL_RenderPresent(Renderer);
+            LastTime = CurrentTime;
+        }
     }
 };
 

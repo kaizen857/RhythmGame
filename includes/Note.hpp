@@ -136,7 +136,6 @@ private:
     Note note;
     SDL_Rect Rect;
     bool IsJudge = false;
-    SDL_Color DrawColor;
 
 public:
     ShowNote(int x, int y, int w, int h, Note note_) :
@@ -146,16 +145,6 @@ public:
         Rect.y = y;
         Rect.w = w;
         Rect.h = h;
-        DrawColor = {255, 255, 255, 255}; // 默认渲染色为白色
-    }
-    ShowNote(int x, int y, int w, int h, SDL_Color color, Note note_) :
-        note(note_)
-    {
-        Rect.x = x;
-        Rect.y = y;
-        Rect.w = w;
-        Rect.h = h;
-        DrawColor = color;
     }
     // setter
     void SetIsJudge(bool isJudge)
@@ -204,13 +193,9 @@ public:
         return note.GetType();
     }
 
-    void Draw(SDL_Renderer *renderer)
+    inline void Draw(SDL_Renderer *renderer, SDL_Texture *texture) const
     {
-        SDL_Color OldColor;
-        SDL_GetRenderDrawColor(renderer, &OldColor.r, &OldColor.g, &OldColor.b, &OldColor.a);
-        SDL_SetRenderDrawColor(renderer, DrawColor.r, DrawColor.g, DrawColor.b, DrawColor.a);
-        SDL_RenderFillRect(renderer, &Rect);
-        SDL_SetRenderDrawColor(renderer, OldColor.r, OldColor.g, OldColor.b, OldColor.a);
+        SDL_RenderCopy(renderer, texture, nullptr, &Rect);
     }
 };
 
