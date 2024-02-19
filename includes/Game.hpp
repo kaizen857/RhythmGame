@@ -45,6 +45,8 @@ private:
     Counter score;
     // 判定线位置
     SDL_Rect JudgeLine{Widge / 2 - 200, Height - 40, 400, 15};
+    // 轨道数
+    const Uint8 TrackNum = 4;
     // 音符下落速度(400ms 走完Height  单位pix/ms)
     const Uint16 Speed = JudgeLine.y / 400;
     // 准确度判定(单位：ms)
@@ -52,6 +54,22 @@ private:
     const Uint8 GoodTiming = 75;
     const Uint8 BadTiming = 125;
     const Uint8 MissTiming = 175;
+
+    // 游戏note材质
+    const std::string NoteFile = "../res/mania/mania-note1.png";
+    SDL_Texture *NoteTexture;
+    // 游戏判定相关材质
+    const std::string ShowPerfectFile = "../res/mania/mania-hitPerfect@2x.png";
+    const std::string ShowGoodFile = "../res/mania/mania-hitGood@2x.png";
+    const std::string ShowBadFile = "../res/mania/mania-hitBad@2x.png";
+    const std::string ShowMissFile = "../res/mania/mania-hitMiss@2x.png";
+    SDL_Texture *PerfectTexture;
+    SDL_Texture *GoodTexture;
+    SDL_Texture *BadTexture;
+    SDL_Texture *MissTexture;
+
+    // 渲染队列
+    std::queue<ShowNote> *RenderQueue;
 
     // 辅助函数 绘制游戏界面
     void DrawInterface(void)
@@ -67,7 +85,24 @@ private:
         SDL_RenderDrawLine(Renderer, Widge / 2 + 200, 0, Widge / 2 + 200, Height);
         SDL_RenderFillRect(Renderer, &JudgeLine);
     }
-
+    // 判定
+    void Judge(void)
+    {
+        for (Uint8 i = 0; i < TrackNum; i++)
+        {
+        }
+    }
+    // 渲染
+    void Show(void)
+    {
+        for (Uint8 i = 0; i < TrackNum; i++)
+        {
+        }
+    }
+    // 添加note
+    void AddNote(void)
+    {
+    }
     // 辅助函数 中途退出
     void Quit(void)
     {
@@ -145,7 +180,6 @@ public:
             << score.GetBad() << "\n"
             << score.GetMiss() << "\n";
         out.close();
-        // Mix_Quit();
     }
 
     void Init(std::string path)
@@ -270,154 +304,6 @@ public:
             SDL_RenderClear(Renderer);
         }
         // 渲染游戏界面
-        DrawInterface();
-        // Mix_PlayMusic(Music, 1);
-        SDL_RenderPresent(Renderer);
-        auto StartTime = SDL_GetTicks();
-        std::queue<ShowNote> RenderQueue;
-        std::int32_t ShowIndex = 0;
-        auto LastTime = SDL_GetTicks();
-        std::ofstream out("info.txt");
-        Uint32 JudgePoint = 0;
-        bool IsQuit = false;
-        while (!IsQuit) // 游戏内循环
-        {
-            // 获取当前帧时间
-            auto NowTime = SDL_GetTicks();
-            out << "nowtime:" << NowTime << "\n";
-            // 添加note进渲染队列
-            if (ShowIndex < map.size() && map[ShowIndex][0].GetStartTime() - 400 <= (NowTime - StartTime))
-            {
-                for (auto &i : map[ShowIndex])
-                {
-                    auto Key = i.GetKey();
-                    auto Type = i.GetType();
-                    if (Type == NoteType::Single)
-                    {
-                        int x = Widge / 2 - 200 + (Key - 1) * 100;
-                        int y = 0;
-                        RenderQueue.push({x, y, 100, 15, i});
-                    }
-                }
-                ShowIndex++;
-            }
-            // 渲染note以及游戏界面（同时判定note）
-            auto Size = RenderQueue.size();
-            bool IsJudge[4];
-            memset(IsJudge, 0, sizeof(IsJudge));
-            DrawInterface();
-            for (auto i = 0; i < Size; i++)
-            {
-                auto Now = RenderQueue.front();
-                RenderQueue.pop();
-                // 如果当前音符已经到达画面底部但仍未被判定
-                if (Now.GetYPos() >= Height && Now.GetIsJudge() == false)
-                {
-                    score.PlusMiss(); // miss+1
-                    Size--;
-                    continue; // 并丢弃音符
-                }
-                SDL_PollEvent(&Event);
-                if (Event.type == SDL_QUIT) // 先判定退出
-                {
-                    IsQuit = true;
-                    break;
-                }
-                else if (Event.type == SDL_KEYDOWN) // 对输入事件进行判定
-                {
-                    auto ReqKey = Now.GetKey();
-                    if (ReqKey == 0)
-                    {
-                        ReqKey = SDLK_a;
-                    }
-                    else if (ReqKey == 1)
-                    {
-                        ReqKey = SDLK_s;
-                    }
-                    else if (ReqKey == 2)
-                    {
-                        ReqKey = SDLK_k;
-                    }
-                    else
-                    {
-                        ReqKey = SDLK_l;
-                    }
-                    if (IsJudge[Now.GetKey() - 1] == false) // 如果当前轨道无音符被判定则进入判定（防止提早判定）
-                    {
-                        auto dif = (NowTime - StartTime) - Now.GetStartTime();
-                        if (dif < 0) // 比判定时间更早点到（不判定miss）
-                        {
-                            dif = std::abs(dif);
-                            if (Event.key.keysym.sym == ReqKey)
-                            {
-                                if (dif <= PerfectTiming)
-                                {
-                                    score.PlusPerfect();
-                                    Now.SetIsJudge(true);
-                                    IsJudge[Now.GetKey() - 1] = true;
-                                    Size--;
-                                }
-                                else if (dif <= GoodTiming)
-                                {
-                                    score.PlusGood();
-                                    Now.SetIsJudge(true);
-                                    IsJudge[Now.GetKey() - 1] = true;
-                                    Size--;
-                                }
-                                else if (dif <= BadTiming)
-                                {
-                                    score.PlusBad();
-                                    Now.SetIsJudge(true);
-                                    IsJudge[Now.GetKey() - 1] = true;
-                                    Size--;
-                                }
-                            }
-                        }
-                        else // 比判定时间更晚点到（判定Miss）
-                        {
-                            if (Event.key.keysym.sym == ReqKey)
-                            {
-                                if (dif <= PerfectTiming)
-                                {
-                                    score.PlusPerfect();
-                                }
-                                else if (dif <= GoodTiming)
-                                {
-                                    score.PlusGood();
-                                }
-                                else if (dif <= BadTiming)
-                                {
-                                    score.PlusBad();
-                                }
-                                else
-                                {
-                                    score.PlusMiss();
-                                }
-                                Now.SetIsJudge(true);
-                                IsJudge[Now.GetKey() - 1] = true;
-                                Size--;
-                            }
-                        }
-                    }
-                }
-                // 更新画面（如果note已做判定则不进行渲染）
-                if (!Now.GetIsJudge())
-                {
-                    auto S = Speed * (NowTime - LastTime);
-                    Now.PlusRectYPos(S);
-                    Now.Draw(Renderer);
-                    RenderQueue.push(Now); // 将音符重新放入渲染队列
-                }
-            }
-            SDL_RenderPresent(Renderer);
-            LastTime = NowTime;
-            if (NowTime > 10000)
-            {
-                IsQuit = true;
-            }
-        }
-        out.close();
-        SDL_Delay(10000);
     }
 };
 
