@@ -81,10 +81,10 @@ public:
 class Counter
 {
 private:
-    uint16_t Perfect;
-    uint16_t Good;
-    uint16_t Bad;
-    uint16_t Miss;
+    uint16_t Perfect = 0;
+    uint16_t Good = 0;
+    uint16_t Bad = 0;
+    uint16_t Miss = 0;
 
 public:
     Counter(int per = 0, int good = 0, int bad = 0, int miss = 0) :
@@ -134,11 +134,11 @@ class ShowNote
 {
 private:
     Note note;
-    SDL_Rect Rect;
+    SDL_FRect Rect;
     bool IsJudge = false;
 
 public:
-    ShowNote(int x, int y, int w, int h, Note note_) :
+    ShowNote(float x, float y, float w, float h, Note note_) :
         note(note_)
     {
         Rect.x = x;
@@ -152,12 +152,12 @@ public:
         IsJudge = isJudge;
     }
 
-    void SetRectYPos(int y)
+    void SetRectYPos(float y)
     {
         Rect.y = y;
     }
 
-    void PlusRectYPos(int y)
+    void PlusRectYPos(float y)
     {
         Rect.y += y;
     }
@@ -168,34 +168,34 @@ public:
         return IsJudge;
     }
 
-    int GetYPos(void) const
+    auto GetYPos(void) const
     {
         return Rect.y;
     }
     // 获取note开始时间
-    std::time_t GetStartTime(void) const
+    auto GetStartTime(void) const
     {
         return note.GetStartTime();
     }
     // 获取note结束时间
-    std::time_t GetEndTime(void) const
+    auto GetEndTime(void) const
     {
         return note.GetEndTime();
     }
     // 获取note轨道位置
-    int GetKey() const
+    auto GetKey() const
     {
         return note.GetKey();
     }
     // 获取note类型
-    NoteType GetType() const
+    auto GetType() const
     {
         return note.GetType();
     }
 
     inline void Draw(SDL_Renderer *renderer, SDL_Texture *texture) const
     {
-        SDL_RenderCopy(renderer, texture, nullptr, &Rect);
+        SDL_RenderCopyF(renderer, texture, nullptr, &Rect);
     }
 };
 

@@ -55,13 +55,15 @@ private:
     const Uint32 MaxDisplayTime = 1000;
     // 轨道数
     const Uint8 TrackNum = 4;
+    // 音符下落时间(单位ms)
+    const Uint32 NoteDownSpeed = 1000;
     // 音符下落速度(400ms 走完Height  单位pix/ms)
-    const Uint16 Speed = JudgeLine.y / 400;
+    const double Speed = static_cast<double>(JudgeLine.y) / static_cast<double>(NoteDownSpeed);
     // 准确度判定(单位：ms)
-    const Uint8 PerfectTiming = 25;
-    const Uint8 GoodTiming = 75;
-    const Uint8 BadTiming = 125;
-    const Uint8 MissTiming = 175;
+    const Uint8 PerfectTiming = 50;
+    const Uint8 GoodTiming = 100;
+    const Uint8 BadTiming = 150;
+    const Uint8 MissTiming = 200;
     // 键位
     SDL_KeyCode KeyCodeForFour[4] = {SDLK_a, SDLK_s, SDLK_k, SDLK_l};
 
@@ -112,21 +114,67 @@ private:
     // 判定
     void Judge(void)
     {
-        for (Uint8 i = 0; i < TrackNum; i++)
+        if (SDL_PollEvent(&Event))
         {
-            auto note = RenderQueue[i].front();
-            SDL_Keycode ReqKey = KeyCodeForFour[i];
-            if (SDL_PollEvent(&Event))
+            for (std::int32_t i = 0; i < TrackNum; i++)
             {
+                auto &note = RenderQueue[i].front();
+                SDL_Keycode ReqKey = KeyCodeForFour[i];
+
                 if (Event.type == SDL_QUIT)
                 {
                     Quit();
                 }
                 else if (Event.type == SDL_KEYDOWN)
                 {
+                    out << "time after start:" << StartGameTime << "  ";
+                    out << "in:" << i << " key is :" << Event.key.keysym.sym << "req key is:" << ReqKey << "\n";
                     if (Event.key.keysym.sym == ReqKey)
                     {
                         auto diff = StartGameTime - note.GetStartTime();
+                        if (diff < 0) // fast
+                        {
+                            diff = std::abs(diff);
+                            if (diff < PerfectTiming)
+                            {
+                                score.PlusPerfect();
+                                note.SetIsJudge(true);
+                                break;
+                            }
+                            else if (diff < GoodTiming)
+                            {
+                                score.PlusGood();
+                                note.SetIsJudge(true);
+                                break;
+                            }
+                            else if (diff < BadTiming)
+                            {
+                                score.PlusBad();
+                                note.SetIsJudge(true);
+                                break;
+                            }
+                        }
+                        else // late
+                        {
+                            if (diff < PerfectTiming)
+                            {
+                                score.PlusPerfect();
+                            }
+                            else if (diff < GoodTiming)
+                            {
+                                score.PlusGood();
+                            }
+                            else if (diff < BadTiming)
+                            {
+                                score.PlusBad();
+                            }
+                            else if (diff < MissTiming)
+                            {
+                                score.PlusMiss();
+                            }
+                            note.SetIsJudge(true);
+                            break;
+                        }
                     }
                 }
             }
@@ -170,13 +218,13 @@ private:
     // 添加note
     void AddNote(void)
     {
-        if (NoteIndex < map.size() && StartGameTime >= (map[NoteIndex][0].GetStartTime()) - 410)
+        if (NoteIndex < map.size() && StartGameTime >= (map[NoteIndex][0].GetStartTime()) - (NoteDownSpeed + 10))
         {
             for (auto &i : map[NoteIndex])
             {
                 auto key = i.GetKey() - 1;
                 auto x = (Widge / 2 - (TrackWidth * 2)) + (key * TrackWidth);
-                RenderQueue[key].push({x, 0, TrackWidth, NoteHeight, i});
+                RenderQueue[key].push(ShowNote(x, 0, TrackWidth, NoteHeight, i));
                 out << "New note:" << i.GetStartTime() << " " << i.GetKey() << " " << x << "\n";
             }
             NoteIndex++;
@@ -447,6 +495,10 @@ public:
             Show();
             SDL_RenderPresent(Renderer);
             LastTime = CurrentTime;
+            if (StartGameTime > 10000)
+            {
+                break;
+            }
         }
     }
 };
