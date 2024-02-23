@@ -162,6 +162,11 @@ public:
         Rect.y += y;
     }
 
+    void PlusRectHPos(float h)
+    {
+        Rect.h += h;
+    }
+
     // getter
     bool GetIsJudge(void) const
     {
