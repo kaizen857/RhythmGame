@@ -58,7 +58,7 @@ private:
     // 轨道数
     const Uint8 TrackNum = 4;
     // 音符下落时间(单位ms)
-    const Uint32 NoteDownSpeed = 500;
+    const Uint32 NoteDownSpeed = 400;
     // 音符下落速度(单位pix/ms)
     const double Speed = static_cast<double>(JudgeLine.y) / static_cast<double>(NoteDownSpeed);
     // 准确度判定(单位：ms)
@@ -70,10 +70,15 @@ private:
     SDL_KeyCode KeyCodeForFour[4] = {SDLK_a, SDLK_s, SDLK_k, SDLK_l};
 
     // 游戏note材质
-    const std::string NoteFile = "./res/mania/mania_note1.png";
-    SDL_Texture *NoteTexture;
+    const std::string Note1File = "./res/mania/mania_note1.png";
+    const std::string Note2File = "./res/mania/mania_note2.png";
+    const std::string Note1LFile = "./res/mania/mania_note1L.png";
+    const std::string Note2LFile = "./res/mania/mania_note2L.png";
+    SDL_Texture *Note1Texture;
+    SDL_Texture *Note2Texture;
+    SDL_Texture *Note1LTexture;
+    SDL_Texture *Note2LTexture;
     const std::string StripFile = "./res/mania/B.png";
-    SDL_Texture *StripTexture;
     // 游戏判定相关材质
     const std::string ShowPerfectFile = "./res/mania/mania_hitPerfect@2x.png";
     const std::string ShowGoodFile = "./res/mania/mania_hitGood@2x.png";
@@ -314,7 +319,14 @@ private:
                     }
                     else
                     {
-                        note.Draw(Renderer, NoteTexture);
+                        if ((i & 1) == 0)
+                        {
+                            note.Draw(Renderer, Note1Texture);
+                        }
+                        else
+                        {
+                            note.Draw(Renderer, Note2Texture);
+                        }
                         auto Distence = Speed * (CurrentTime - LastTime);
                         note.PlusRectYPos(Distence);
                         if (note.GetYPos() > Height)
@@ -324,6 +336,16 @@ private:
                                 out << "Miss(out of screen) in:" << StartGameTime << "\n"
                                     << " key:" << note.GetKey() << "\n";
                                 score.PlusMiss();
+                                if (IsNowShowJudge)
+                                {
+                                    NowShowJudgeTime = 0;
+                                }
+                                else
+                                {
+                                    IsNowShowJudge = true;
+                                    NowShowJudgeTime = 0;
+                                }
+                                NowShowTexture = MissTexture;
                             }
                         }
                         else
@@ -334,7 +356,6 @@ private:
                 }
                 else // 长条
                 {
-                    note.Draw(Renderer, StripTexture);
                 }
             }
         }
@@ -343,7 +364,7 @@ private:
     // 添加note
     void AddNote(void)
     {
-        if (NoteIndex < map.size() && StartGameTime >= (map[NoteIndex][0].GetStartTime()) - (NoteDownSpeed - 50))
+        if (NoteIndex < map.size() && StartGameTime >= (map[NoteIndex][0].GetStartTime()) - (NoteDownSpeed - 10))
         {
             for (auto &i : map[NoteIndex])
             {
@@ -360,7 +381,7 @@ private:
     {
         IsQuit = true;
         SDL_DestroyTexture(BackGround);
-        SDL_DestroyTexture(NoteTexture);
+        SDL_DestroyTexture(Note1Texture);
         SDL_DestroyTexture(PerfectTexture);
         SDL_DestroyTexture(GoodTexture);
         SDL_DestroyTexture(BadTexture);
@@ -437,7 +458,7 @@ public:
         if (!IsQuit)
         {
             SDL_DestroyTexture(BackGround);
-            SDL_DestroyTexture(NoteTexture);
+            SDL_DestroyTexture(Note1Texture);
             SDL_DestroyTexture(PerfectTexture);
             SDL_DestroyTexture(GoodTexture);
             SDL_DestroyTexture(BadTexture);
@@ -529,8 +550,10 @@ public:
         in.close();
 
         // 加载游戏界面纹理
-        NoteTexture = IMG_LoadTexture(Renderer, NoteFile.c_str());
-        StripTexture = IMG_LoadTexture(Renderer, StripFile.c_str());
+        Note1Texture = IMG_LoadTexture(Renderer, Note1File.c_str());
+        Note2Texture = IMG_LoadTexture(Renderer, Note2File.c_str());
+        Note1LTexture = IMG_LoadTexture(Renderer, Note1LFile.c_str());
+        Note2LTexture = IMG_LoadTexture(Renderer, Note2LFile.c_str());
         PerfectTexture = IMG_LoadTexture(Renderer, ShowPerfectFile.c_str());
         GoodTexture = IMG_LoadTexture(Renderer, ShowGoodFile.c_str());
         BadTexture = IMG_LoadTexture(Renderer, ShowBadFile.c_str());
