@@ -1,7 +1,6 @@
 #ifndef _NOTE_HPP_
 #define _NOTE_HPP_
 
-#include <cstdint>
 #include <ctime>
 #include <SDL2/SDL.h>
 
@@ -81,52 +80,61 @@ public:
 class Counter
 {
 private:
-    uint16_t Perfect = 0;
-    uint16_t Good = 0;
-    uint16_t Bad = 0;
-    uint16_t Miss = 0;
+    Uint16 Perfect = 0;
+    Uint16 Good = 0;
+    Uint16 Bad = 0;
+    Uint16 Miss = 0;
+    Uint16 Total = 0;
 
 public:
     Counter(int per = 0, int good = 0, int bad = 0, int miss = 0) :
         Perfect(per), Good(good), Bad(bad), Miss(miss){};
 
-    int GetPerfect(void) const
+    auto GetPerfect(void) const
     {
         return Perfect;
     }
-    int GetGood(void) const
+    auto GetGood(void) const
     {
         return Good;
     }
-    int GetBad(void) const
+    auto GetBad(void) const
     {
         return Bad;
     }
-    int GetMiss(void) const
+    auto GetMiss(void) const
     {
         return Miss;
+    }
+    auto GetTotal(void) const
+    {
+        return Total;
     }
 
     void PlusPerfect(void)
     {
         ++Perfect;
+        ++Total;
     }
     void PlusGood(void)
     {
         ++Good;
+        ++Total;
     }
     void PlusBad(void)
     {
         ++Bad;
+        ++Total;
     }
     void PlusMiss(void)
     {
         ++Miss;
+        ++Total;
     }
 
     void Resect(void)
     {
-        Perfect = Good = Bad = Miss = 0;
+        Perfect = Good = Bad = Miss = Total = 0;
     }
 };
 

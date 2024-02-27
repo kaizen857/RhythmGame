@@ -9,6 +9,9 @@
             "args": [
                 "-g",
                 "C:\\SDL_Project\\RhythmGame\\main.cpp",
+                "-I",
+                "C:\\SDL_Project\\RhythmGame\\includes",
+                "C:\\SDL_Project\\RhythmGame\\src\\Game.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-lmingw32",
@@ -31,7 +34,7 @@
                 "isDefault": true
             }
         },
-                {
+        {
             "type": "shell",
             "label": "g++ build active file",
             //注意改成自己的MinGW目录
