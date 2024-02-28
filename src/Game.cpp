@@ -1,4 +1,6 @@
 #include "../includes/Game.hpp"
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <cstring>
 #include <cstddef>
 #include <cstdlib>
@@ -66,6 +68,7 @@ Game::~Game()
         SDL_DestroyRenderer(Renderer);
         SDL_DestroyWindow(Window);
         TTF_CloseFont(Font);
+        TTF_CloseFont(ComboFont);
         Mix_FreeMusic(Music);
         Mix_Quit();
         TTF_Quit();
@@ -95,6 +98,7 @@ void Game::Init(std::string path)
 
     // 加载字体
     Font = TTF_OpenFont(FontFile.c_str(), 40);
+    ComboFont = TTF_OpenFont(ComboFontFile.c_str(), 40);
     if (Font == NULL)
     {
         throw(std::runtime_error(TTF_GetError()));
@@ -215,7 +219,7 @@ void Game::Run(void)
         SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
         SDL_RenderClear(Renderer);
     }
-    // 渲染游戏界面
+
     RenderQueue = new std::queue<ShowNote>[TrackNum];
     StartTime = SDL_GetTicks();
     LastTime = StartTime;
@@ -232,6 +236,7 @@ void Game::Run(void)
         Judge();
         Show();
         ShowJudge();
+        ShowCombo();
         SDL_RenderPresent(Renderer);
         LastTime = CurrentTime;
         if (StartGameTime > 10000)
@@ -254,6 +259,7 @@ void Game::Quit(void)
     SDL_DestroyWindow(Window);
     TTF_CloseFont(Font);
     Mix_FreeMusic(Music);
+    TTF_CloseFont(ComboFont);
     Mix_Quit();
     TTF_Quit();
     IMG_Quit();
@@ -337,12 +343,28 @@ void Game::Show(void)
             }
             else // 长条
             {
+                
             }
         }
     }
-    // 判定渲染
 }
 
+void Game::ShowCombo(void)
+{
+    auto Combo = score.GetCombo();
+    if (Combo > 0)
+    {
+        auto ComboSurface = TTF_RenderText_Blended(ComboFont, std::to_string(Combo).c_str(), ComboColor);
+        auto ComboTexture = SDL_CreateTextureFromSurface(Renderer, ComboSurface);
+        SDL_Rect ComboPos;
+        SDL_QueryTexture(ComboTexture, nullptr, nullptr, &ComboPos.w, &ComboPos.h);
+        ComboPos.x = (Widge - ComboPos.w) / 2;
+        ComboPos.y = ShowJudgePos.y - 50;
+        SDL_RenderCopy(Renderer, ComboTexture, nullptr, &ComboPos);
+        SDL_FreeSurface(ComboSurface);
+        SDL_DestroyTexture(ComboTexture);
+    }
+}
 void Game::ShowJudge(void)
 {
     if (IsNowShowJudge)

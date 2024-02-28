@@ -84,6 +84,12 @@ private:
     SDL_Texture *GoodTexture;
     SDL_Texture *BadTexture;
     SDL_Texture *MissTexture;
+
+    // 游戏分数字体
+    const std::string ComboFontFile = "./res/LCALLIG.TTF";
+    TTF_Font *ComboFont;
+    SDL_Color ComboColor{255, 255, 255};
+
     // 显示游戏判定
     SDL_Texture *NowShowTexture = nullptr;
     // 显示游戏判定时间
@@ -130,6 +136,9 @@ private:
     void AddNote(void);
     // 辅助函数 中途退出
     void Quit(void);
+
+    // 显示连击数
+    void ShowCombo(void);
 
 public:
     Game();

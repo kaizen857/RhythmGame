@@ -84,7 +84,7 @@ private:
     Uint16 Good = 0;
     Uint16 Bad = 0;
     Uint16 Miss = 0;
-    Uint16 Total = 0;
+    Uint16 Combo = 0;
 
 public:
     Counter(int per = 0, int good = 0, int bad = 0, int miss = 0) :
@@ -106,35 +106,35 @@ public:
     {
         return Miss;
     }
-    auto GetTotal(void) const
+    auto GetCombo(void) const
     {
-        return Total;
+        return Combo;
     }
 
     void PlusPerfect(void)
     {
         ++Perfect;
-        ++Total;
+        ++Combo;
     }
     void PlusGood(void)
     {
         ++Good;
-        ++Total;
+        ++Combo;
     }
     void PlusBad(void)
     {
         ++Bad;
-        ++Total;
+        ++Combo;
     }
     void PlusMiss(void)
     {
         ++Miss;
-        ++Total;
+        Combo = 0;
     }
 
     void Resect(void)
     {
-        Perfect = Good = Bad = Miss = Total = 0;
+        Perfect = Good = Bad = Miss = Combo = 0;
     }
 };
 
