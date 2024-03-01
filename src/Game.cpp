@@ -1,5 +1,6 @@
 #include "../includes/Game.hpp"
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 #include <cstring>
 #include <cstddef>
@@ -24,7 +25,7 @@ Game::Game()
         std::exit(EXIT_FAILURE);
     }
     // 初始化渲染器
-    Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED);
     // 设置纹理线性过滤
     if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2"))
     {
@@ -65,6 +66,10 @@ Game::~Game()
         SDL_DestroyTexture(GoodTexture);
         SDL_DestroyTexture(BadTexture);
         SDL_DestroyTexture(MissTexture);
+        SDL_DestroyTexture(Note1Texture);
+        SDL_DestroyTexture(Note2Texture);
+        SDL_DestroyTexture(Note1LTexture);
+        SDL_DestroyTexture(Note2LTexture);
         SDL_DestroyRenderer(Renderer);
         SDL_DestroyWindow(Window);
         TTF_CloseFont(Font);
@@ -226,6 +231,7 @@ void Game::Run(void)
     out.open("output.txt");
     NoteIndex = 0;
     out << ShowJudgePos.w << " " << ShowJudgePos.h << "\n";
+    Mix_PlayMusic(Music, 1);
     while (!IsQuit)
     {
         CurrentTime = SDL_GetTicks();
@@ -239,10 +245,6 @@ void Game::Run(void)
         ShowCombo();
         SDL_RenderPresent(Renderer);
         LastTime = CurrentTime;
-        if (StartGameTime > 10000)
-        {
-            break;
-        }
     }
 }
 
@@ -255,6 +257,10 @@ void Game::Quit(void)
     SDL_DestroyTexture(GoodTexture);
     SDL_DestroyTexture(BadTexture);
     SDL_DestroyTexture(MissTexture);
+    SDL_DestroyTexture(Note1Texture);
+    SDL_DestroyTexture(Note2Texture);
+    SDL_DestroyTexture(Note1LTexture);
+    SDL_DestroyTexture(Note2LTexture);
     SDL_DestroyRenderer(Renderer);
     SDL_DestroyWindow(Window);
     TTF_CloseFont(Font);
@@ -314,8 +320,8 @@ void Game::Show(void)
                     {
                         note.Draw(Renderer, Note2Texture);
                     }
-                    auto Distence = Speed * (CurrentTime - LastTime);
-                    note.PlusRectYPos(Distence);
+                    auto Distance = Speed * (CurrentTime - LastTime);
+                    note.PlusRectYPos(Distance);
                     if (note.GetYPos() > Height)
                     {
                         if (note.GetIsJudge() == false)
@@ -343,7 +349,59 @@ void Game::Show(void)
             }
             else // 长条
             {
-                
+                if (StartGameTime >= (note.GetEndTime() - (NoteDownSpeed - 10)))
+                {
+                    out << "note end here:" << StartGameTime << "\n";
+                    note.SetIsEnd(true);
+                }
+                if ((i & 1) == 0)
+                {
+                    note.Draw(Renderer, Note1LTexture);
+                }
+                else
+                {
+                    note.Draw(Renderer, Note2LTexture);
+                }
+                auto Distance = Speed * (CurrentTime - LastTime);
+                if (note.GetIsEnd()) // 长条尾部已经进入屏幕（长条长度固定）
+                {
+                    note.PlusRectYPos(Distance);
+                    if ((note.GetYPos() + note.GetRectH()) > JudgeLine.y) // 长条头部已经越过判定线
+                    {
+                        note.MinusRectH(static_cast<float>((note.GetYPos() + note.GetRectH() - JudgeLine.y)));
+                    }
+                }
+                else // 长条尾部仍未进入屏幕（更新长条长度）
+                {
+                    note.PlusRectHPos(Distance);
+                    if ((note.GetYPos() + note.GetRectH()) > JudgeLine.y) // 长条头部已经越过判定线
+                    {
+                        note.MinusRectH(static_cast<float>((note.GetYPos() + note.GetRectH() - JudgeLine.y)));
+                    }
+                }
+                if (note.GetYPos() > Height) // 长条尾部过判定线
+                {
+                    if (note.GetIsJudge() == false)
+                    {
+                        out << "Miss(out of screen) in:" << StartGameTime << "\n"
+                            << "    key:" << note.GetKey() << "\n";
+                        score.PlusMiss();
+                        if (IsNowShowJudge)
+                        {
+                            NowShowJudgeTime = 0;
+                        }
+                        else
+                        {
+                            IsNowShowJudge = true;
+                            NowShowJudgeTime = 0;
+                        }
+                        NowShowTexture = MissTexture;
+                    }
+                }
+                else
+                {
+                    RenderQueue[i].push(note);
+                }
             }
         }
     }
@@ -380,6 +438,427 @@ void Game::ShowJudge(void)
     }
 }
 
+void Game::JudgeNoteStart(ShowNote &note)
+{
+    auto diff = StartGameTime - note.GetStartTime();
+    if (diff < 0) // fast
+    {
+        diff = std::abs(diff);
+        if (diff < PerfectTiming)
+        {
+            score.PlusPerfect();
+            out << " res: perfect(early)"
+                << "\n";
+            note.SetIsJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = PerfectTexture;
+        }
+        else if (diff < GoodTiming)
+        {
+            score.PlusGood();
+            out << " res: good(early)"
+                << "\n";
+            note.SetIsJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = GoodTexture;
+        }
+        else if (diff < BadTiming)
+        {
+            score.PlusBad();
+            out << " res: bad(early)"
+                << "\n";
+            note.SetIsJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = BadTexture;
+        }
+    }
+    else // late
+    {
+        if (diff < PerfectTiming)
+        {
+            out << " res: perfect(late)"
+                << "\n";
+            score.PlusPerfect();
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = PerfectTexture;
+        }
+        else if (diff < GoodTiming)
+        {
+            score.PlusGood();
+            out << " res: good(late)"
+                << "\n";
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = GoodTexture;
+        }
+        else if (diff < BadTiming)
+        {
+            score.PlusBad();
+            out << " res: bad(late)"
+                << "\n";
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = BadTexture;
+        }
+        else if (diff < MissTiming)
+        {
+            score.PlusMiss();
+            out << " res: miss(late)"
+                << "\n";
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = MissTexture;
+        }
+        note.SetIsJudge(true);
+    }
+}
+void Game::JudgeStripStart(ShowNote &note)
+{
+    auto diff = StartGameTime - note.GetStartTime();
+    if (diff < 0) // fast
+    {
+        diff = std::abs(diff);
+        if (diff < PerfectTiming)
+        {
+            score.PlusPerfect();
+            out << " res(Strip Start): perfect(early)"
+                << "\n";
+            note.SetIsStartJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = PerfectTexture;
+        }
+        else if (diff < GoodTiming)
+        {
+            score.PlusGood();
+            out << " res(Strip Start): good(early)"
+                << "\n";
+            note.SetIsStartJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = GoodTexture;
+        }
+        else if (diff < BadTiming)
+        {
+            score.PlusBad();
+            out << " res(Strip Start): bad(early)"
+                << "\n";
+            note.SetIsStartJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = BadTexture;
+        }
+    }
+    else // late
+    {
+        if (diff < PerfectTiming)
+        {
+            out << " res(Strip Start): perfect(late)"
+                << "\n";
+            score.PlusPerfect();
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = PerfectTexture;
+        }
+        else if (diff < GoodTiming)
+        {
+            score.PlusGood();
+            out << " res(Strip Start): good(late)"
+                << "\n";
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = GoodTexture;
+        }
+        else if (diff < BadTiming)
+        {
+            score.PlusBad();
+            out << " res(Strip Start): bad(late)"
+                << "\n";
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = BadTexture;
+        }
+        else if (diff < MissTiming)
+        {
+            score.PlusMiss();
+            out << " res(Strip Start): miss(late)"
+                << "\n";
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = MissTexture;
+        }
+        note.SetIsStartJudge(true);
+    }
+}
+
+void Game::JudgeStripMid(ShowNote &note)
+{
+    auto LastJudgeTime = note.GetLastJudgeTime();
+    if (Event.type == SDL_KEYUP)
+    {
+        score.PlusMiss();
+        if (IsNowShowJudge)
+        {
+            NowShowJudgeTime = 0;
+        }
+        else
+        {
+            IsNowShowJudge = true;
+            NowShowJudgeTime = 0;
+        }
+        NowShowTexture = MissTexture;
+    }
+    else
+    {
+        if (CurrentTime - LastJudgeTime >= 10)
+        {
+            score.PlusPerfect();
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = PerfectTexture;
+            note.SetLastJudgeTime(CurrentTime);
+        }
+    }
+}
+
+void Game::JudgeStripEnd(ShowNote &note) // 长条尾部判定
+{
+    auto diff = StartGameTime - note.GetEndTime();
+    if (diff < 0) // fast
+    {
+        diff = std::abs(diff);
+        if (diff < PerfectTiming)
+        {
+            score.PlusPerfect();
+            out << " res(Strip End): perfect(early)"
+                << "\n";
+            note.SetIsJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = PerfectTexture;
+        }
+        else if (diff < GoodTiming)
+        {
+            score.PlusGood();
+            out << " res(Strip End): good(early)"
+                << "\n";
+            note.SetIsJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = GoodTexture;
+        }
+        else if (diff < BadTiming)
+        {
+            score.PlusBad();
+            out << " res(Strip End): bad(early)"
+                << "\n";
+            note.SetIsJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = BadTexture;
+        }
+        else if (diff < MissTiming)
+        {
+            score.PlusMiss();
+            out << " res(Strip End): miss(early)"
+                << "\n";
+            note.SetIsJudge(true);
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = MissTexture;
+        }
+    }
+    else // late
+    {
+        if (diff < PerfectTiming)
+        {
+            out << " res(Strip End): perfect(late)"
+                << "\n";
+            score.PlusPerfect();
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = PerfectTexture;
+        }
+        else if (diff < GoodTiming)
+        {
+            score.PlusGood();
+            out << " res(Strip End): good(late)"
+                << "\n";
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = GoodTexture;
+        }
+        else
+        {
+            score.PlusBad();
+            out << " res(Strip End): bad(late)"
+                << "\n";
+            if (IsNowShowJudge)
+            {
+                NowShowJudgeTime = 0;
+            }
+            else
+            {
+                IsNowShowJudge = true;
+                NowShowJudgeTime = 0;
+            }
+            NowShowTexture = BadTexture;
+        }
+        note.SetIsJudge(true);
+    }
+}
+
 void Game::Judge(void)
 {
     if (SDL_PollEvent(&Event))
@@ -387,145 +866,45 @@ void Game::Judge(void)
         for (std::int32_t i = 0; i < TrackNum; i++)
         {
             auto &note = RenderQueue[i].front();
-            SDL_Keycode ReqKey = KeyCodeForFour[i];
+            auto ReqKey = KeyCodeForFour[i];
 
             if (Event.type == SDL_QUIT)
             {
                 Quit();
             }
-            else if (Event.type == SDL_KEYDOWN)
+            else if (note.GetType() == NoteType::Single) // 单键
             {
-                out << "time after start:" << StartGameTime << "  ";
-                out << "in:" << i << " key is :" << Event.key.keysym.sym << "req key is:" << ReqKey << "\n";
+                if (Event.type == SDL_KEYDOWN)
+                {
+                    out << "time after start:" << StartGameTime << "  ";
+                    out << "in:" << i << " key is :" << Event.key.keysym.sym << "req key is:" << ReqKey << "\n";
+                    if (Event.key.keysym.sym == ReqKey)
+                    {
+                        JudgeNoteStart(note);
+                        break;
+                    }
+                }
+            }
+            else if (note.GetType() == NoteType::Strip) // 长条
+            {
                 if (Event.key.keysym.sym == ReqKey)
                 {
-                    auto diff = StartGameTime - note.GetStartTime();
-                    if (diff < 0) // fast
+                    if (note.GetIsStartJudge()) // 头部已经进判定
                     {
-                        diff = std::abs(diff);
-                        if (diff < PerfectTiming)
+                        if (note.GetEndTime() - StartGameTime <= MissTiming && Event.type == SDL_KEYUP) // 尾判开始
                         {
-                            score.PlusPerfect();
-                            out << " res: perfect(early)"
-                                << "\n";
-                            note.SetIsJudge(true);
-                            if (IsNowShowJudge)
-                            {
-                                NowShowJudgeTime = 0;
-                            }
-                            else
-                            {
-                                IsNowShowJudge = true;
-                                NowShowJudgeTime = 0;
-                            }
-                            NowShowTexture = PerfectTexture;
+                            JudgeStripEnd(note);
                             break;
                         }
-                        else if (diff < GoodTiming)
+                        else // 长条内部判定
                         {
-                            score.PlusGood();
-                            out << " res: good(early)"
-                                << "\n";
-                            note.SetIsJudge(true);
-                            if (IsNowShowJudge)
-                            {
-                                NowShowJudgeTime = 0;
-                            }
-                            else
-                            {
-                                IsNowShowJudge = true;
-                                NowShowJudgeTime = 0;
-                            }
-                            NowShowTexture = GoodTexture;
-                            break;
-                        }
-                        else if (diff < BadTiming)
-                        {
-                            score.PlusBad();
-                            out << " res: bad(early)"
-                                << "\n";
-                            note.SetIsJudge(true);
-                            if (IsNowShowJudge)
-                            {
-                                NowShowJudgeTime = 0;
-                            }
-                            else
-                            {
-                                IsNowShowJudge = true;
-                                NowShowJudgeTime = 0;
-                            }
-                            NowShowTexture = BadTexture;
+                            JudgeStripMid(note);
                             break;
                         }
                     }
-                    else // late
+                    else // 头部未进判定则对头部进行判定
                     {
-                        diff = std::abs(diff);
-                        if (diff < PerfectTiming)
-                        {
-                            out << " res: perfect(late)"
-                                << "\n";
-                            score.PlusPerfect();
-                            if (IsNowShowJudge)
-                            {
-                                NowShowJudgeTime = 0;
-                            }
-                            else
-                            {
-                                IsNowShowJudge = true;
-                                NowShowJudgeTime = 0;
-                            }
-                            NowShowTexture = PerfectTexture;
-                        }
-                        else if (diff < GoodTiming)
-                        {
-                            score.PlusGood();
-                            out << " res: good(late)"
-                                << "\n";
-                            if (IsNowShowJudge)
-                            {
-                                NowShowJudgeTime = 0;
-                            }
-                            else
-                            {
-                                IsNowShowJudge = true;
-                                NowShowJudgeTime = 0;
-                            }
-                            NowShowTexture = GoodTexture;
-                        }
-                        else if (diff < BadTiming)
-                        {
-                            score.PlusBad();
-                            out << " res: bad(late)"
-                                << "\n";
-                            if (IsNowShowJudge)
-                            {
-                                NowShowJudgeTime = 0;
-                            }
-                            else
-                            {
-                                IsNowShowJudge = true;
-                                NowShowJudgeTime = 0;
-                            }
-                            NowShowTexture = BadTexture;
-                        }
-                        else if (diff < MissTiming)
-                        {
-                            score.PlusMiss();
-                            out << " res: miss(late)"
-                                << "\n";
-                            if (IsNowShowJudge)
-                            {
-                                NowShowJudgeTime = 0;
-                            }
-                            else
-                            {
-                                IsNowShowJudge = true;
-                                NowShowJudgeTime = 0;
-                            }
-                            NowShowTexture = MissTexture;
-                        }
-                        note.SetIsJudge(true);
+                        JudgeStripStart(note);
                         break;
                     }
                 }

@@ -144,6 +144,9 @@ private:
     Note note;
     SDL_FRect Rect;
     bool IsJudge = false;
+    bool IsEnd = false;
+    bool IsStartJudge = false;
+    Uint32 LastJudgeTime = 0;
 
 public:
     ShowNote(float x, float y, float w, float h, Note note_) :
@@ -165,6 +168,21 @@ public:
         Rect.y = y;
     }
 
+    void SetIsEnd(bool isEnd)
+    {
+        IsEnd = isEnd;
+    }
+
+    void SetLastJudgeTime(Uint32 lastJudgeTime)
+    {
+        LastJudgeTime = lastJudgeTime;
+    }
+
+    void SetIsStartJudge(bool isStartJudge)
+    {
+        IsStartJudge = isStartJudge;
+    }
+
     void PlusRectYPos(float y)
     {
         Rect.y += y;
@@ -176,9 +194,24 @@ public:
     }
 
     // getter
-    bool GetIsJudge(void) const
+    auto GetIsJudge(void) const
     {
         return IsJudge;
+    }
+
+    auto GetIsStartJudge(void) const
+    {
+        return IsStartJudge;
+    }
+
+    auto GetIsEnd(void) const
+    {
+        return IsEnd;
+    }
+
+    auto GetLastJudgeTime(void) const
+    {
+        return LastJudgeTime;
     }
 
     auto GetYPos(void) const
@@ -204,6 +237,18 @@ public:
     auto GetType() const
     {
         return note.GetType();
+    }
+
+    // 获取当前渲染长度（长条用）
+    auto GetRectH(void) const
+    {
+        return Rect.h;
+    }
+
+    // 减短长条长度
+    void MinusRectH(float h)
+    {
+        Rect.h -= h;
     }
 
     inline void Draw(SDL_Renderer *renderer, SDL_Texture *texture) const

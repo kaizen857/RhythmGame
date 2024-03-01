@@ -126,6 +126,15 @@ private:
     // 判定
     void Judge(void);
 
+    // 普通note判定
+    void JudgeNoteStart(ShowNote &note);
+    // 长条头部判定
+    void JudgeStripStart(ShowNote &note);
+    // 长条中间判定
+    void JudgeStripMid(ShowNote &note);
+    // 长条尾部判定
+    void JudgeStripEnd(ShowNote &note);
+
     // 显示判定
     void ShowJudge(void);
 
