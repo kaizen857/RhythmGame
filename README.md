@@ -10,5 +10,7 @@
 
 使用到的素材：
 note素材来自：https://bbs.hiosu.com/forum.php?mod=viewthread&tid=26&highlight=AMD&page=1&extra=#pid32
+
 判定素材来自：（下载的皮肤没留名字，已经忘了是哪个名字了((((
+
 谱面转换自osu:https://osu.ppy.sh/beatmapsets/1852868#mania/3807444
