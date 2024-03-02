@@ -64,6 +64,8 @@ private:
     const Uint8 MissTiming = 200;
     // 键位
     SDL_KeyCode KeyCodeForFour[4] = {SDLK_a, SDLK_s, SDLK_k, SDLK_l};
+    // 音量
+    const Uint8 MusicVolume = 64;
 
     // 游戏note材质
     const std::string Note1File = "./res/mania/mania_note1.png";

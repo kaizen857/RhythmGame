@@ -25,7 +25,7 @@ Game::Game()
         std::exit(EXIT_FAILURE);
     }
     // 初始化渲染器
-    Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED);
+    Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED); // | SDL_RENDERER_PRESENTVSYNC
     // 设置纹理线性过滤
     if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2"))
     {
@@ -231,7 +231,9 @@ void Game::Run(void)
     out.open("output.txt");
     NoteIndex = 0;
     out << ShowJudgePos.w << " " << ShowJudgePos.h << "\n";
-    Mix_PlayMusic(Music, 1);
+    // Mix_MasterVolume(0);
+    Mix_PlayMusic(Music, 0);
+    Mix_VolumeMusic(MusicVolume);
     while (!IsQuit)
     {
         CurrentTime = SDL_GetTicks();
