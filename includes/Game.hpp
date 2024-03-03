@@ -43,6 +43,8 @@ private:
     const Uint16 TrackWidth = 100;
     // note高度
     const Uint16 NoteHeight = 50;
+    // 轨道数
+    const Uint8 TrackNum = 4;
     // 判定线位置
     SDL_FRect JudgeLine{static_cast<float>(Widge) / 2.0f - 200.0f, static_cast<float>(Height) - 80.0f, static_cast<float>(TrackWidth *TrackNum), 15.0f};
     // 显示判定的位置
@@ -51,8 +53,7 @@ private:
     Uint32 DisplayTime = 0;
     // 判定显示的最大时间
     const Uint32 MaxDisplayTime = 1000;
-    // 轨道数
-    const Uint8 TrackNum = 4;
+
     // 音符下落时间(单位ms)
     const Uint32 NoteDownSpeed = 400;
     // 音符下落速度(单位pix/ms)
