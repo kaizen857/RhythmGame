@@ -22,8 +22,8 @@ private:
     SDL_Renderer *Renderer;
     SDL_Event Event;
     // 窗口宽度，高度
-    const std::int16_t Widge = 1600;
-    const std::int16_t Height = 900;
+    const std::int16_t Widge = 1920;
+    const std::int16_t Height = 1080;
     // SDL_IMG相关设定
     std::int32_t ImgFlags = IMG_INIT_PNG;
     const std::string ImgFile = "./res/bg.png";
@@ -39,14 +39,14 @@ private:
     const std::string MusicFile = "./res/audio.ogg";
     // 分数计数器
     Counter score;
-    // 判定线位置
-    SDL_FRect JudgeLine{static_cast<float>(Widge) / 2.0f - 200.0f, static_cast<float>(Height) - 80.0f, 400.0f, 15.0f};
-    // 显示判定的位置
-    SDL_FRect DisplayJudge{static_cast<float>(Widge) / 2.0f, static_cast<float>(Height) / 2.0f - 100.0f, 200.0f, 50.0f};
     // 轨道宽度
     const Uint16 TrackWidth = 100;
     // note高度
-    const Uint16 NoteHeight = 25;
+    const Uint16 NoteHeight = 50;
+    // 判定线位置
+    SDL_FRect JudgeLine{static_cast<float>(Widge) / 2.0f - 200.0f, static_cast<float>(Height) - 80.0f, static_cast<float>(TrackWidth *TrackNum), 15.0f};
+    // 显示判定的位置
+    SDL_FRect DisplayJudge{static_cast<float>(Widge) / 2.0f, static_cast<float>(Height) / 2.0f - 100.0f, 200.0f, 50.0f};
     // 距离判定显示后的时间
     Uint32 DisplayTime = 0;
     // 判定显示的最大时间
