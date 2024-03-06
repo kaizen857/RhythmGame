@@ -3,7 +3,7 @@
 int main(int, char *[])
 {
     Game game;
-    //game.Init("./res/test.dat");
+    game.Init("./res/test.dat");
     game.ShowMenu();
     SDL_Event Event;
     bool Quit = false;
