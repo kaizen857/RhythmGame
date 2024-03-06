@@ -55,7 +55,7 @@ private:
     const Uint32 MaxDisplayTime = 1000;
 
     // 音符下落时间(单位ms)
-    const Uint32 NoteDownSpeed = 400;
+    const Uint32 NoteDownSpeed = 450;
     // 音符下落速度(单位pix/ms)
     const double Speed = static_cast<double>(JudgeLine.y) / static_cast<double>(NoteDownSpeed);
     // 准确度判定(单位：ms)
