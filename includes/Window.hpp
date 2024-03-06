@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_stdinc.h>
 #include <memory>
+#include <string>
 class Window
 {
 private:
@@ -14,7 +15,8 @@ public:
     {
         mWindow = std::make_shared<SDL_Window>(SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN), SDL_DestroyWindow);
     };
-    ~Window();
+    Window() = default;
+    ~Window() = default;
 
     // Getters
     auto getWidth() const
@@ -39,6 +41,16 @@ public:
     void setHeight(Uint16 height)
     {
         Height = height;
+    }
+
+    void CreateWindow(Uint16 width, Uint16 height, const char *title)
+    {
+        mWindow = std::make_shared<SDL_Window>(SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN), SDL_DestroyWindow);
+    }
+
+    void CreateWindow(Uint16 width, Uint16 height,const std::string &title)
+    {
+        mWindow = std::make_shared<SDL_Window>(SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN), SDL_DestroyWindow);
     }
 };
 
