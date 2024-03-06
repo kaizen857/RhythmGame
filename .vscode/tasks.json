@@ -41,7 +41,10 @@
             "command": "g++",
             "args": [
                 "-g",
-                "${file}",
+                "${workspaceFolder}/main.cpp",
+                "-I",
+                "${workspaceFolder}/includes",
+                "${workspaceFolder}/src/Game.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-lSDL2main",
