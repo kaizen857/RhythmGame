@@ -37,3 +37,11 @@
 *.app
 
 *.json
+/.vs/RhythmGame/v17/Browse.VC.opendb
+*.db-wal
+*.db-shm
+*.vsidx
+*.ipch
+*.sqlite
+*.db
+*.wsuo
